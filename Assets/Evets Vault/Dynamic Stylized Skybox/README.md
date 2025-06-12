@@ -21,6 +21,14 @@ You can also refer to other resources on how to create cubemap textures.**
 Unity's documentation on cubemap textures can be found here:
 https://docs.unity3d.com/6000.1/Documentation/Manual/class-Cubemap-create.html
 
+### Included Textures
+There are 4 included textures:
+- 2048x4096 Painted Cloud Texture
+- 2048x4096 Painted Cloud Back Texture
+- 2048x4096 NASA Moon Surface Texture
+- 4096x8192 NASA Starmap Texture
+Refer to NASA visualization studio for reproduction guidelines: https://www.nasa.gov/nasa-brand-center/images-and-media/.
+
 ## Skybox Settings Scriptable Object
 In the `Skybox Settings` scriptable object, you will find all the parameters to the skybox.
 The script can be found at `Assets/Evets Vault/Stylized Dynamic Skybox/Scripts/SkyboxSettings.cs`.
