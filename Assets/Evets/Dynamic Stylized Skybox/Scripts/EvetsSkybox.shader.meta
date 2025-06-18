@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 272820f54bbd7cf4390571d1ebd54069
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _SunZenithGrad: {instanceID: 0}
+  - _ViewZenithGrad: {instanceID: 0}
+  - _SunViewGrad: {instanceID: 0}
+  - _SunCubeMap: {instanceID: 0}
+  - _MoonCubeMap: {instanceID: 0}
+  - _CloudGrad: {instanceID: 0}
+  - _CloudCubeMap: {instanceID: 0}
+  - _CloudBackCubeMap: {instanceID: 0}
+  - _StarCubeMap: {instanceID: 0}
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
