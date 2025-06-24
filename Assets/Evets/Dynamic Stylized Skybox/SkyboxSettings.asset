@@ -162,25 +162,38 @@ MonoBehaviour:
     m_ColorSpace: 0
     m_NumColorKeys: 7
     m_NumAlphaKeys: 2
-  sunRadius: 0.1
+  sunRadius: 0.12
   sunIntensity: 4
   customizeSunColors: 1
-  sunTexture: 1
+  sunTexture: 0
   sunCubeMap: {fileID: 8900000, guid: 017cba7961620c047b2611812fb159cf, type: 3}
   sunTextureStrength: 0.8
   synthwaveSun: 0
   synthSunBottom: 0.5
   synthSunLines: 64
+  moonCount: 3
   moonTexture: {fileID: 8900000, guid: 2c994b41ee22a30418ad058f51c49aeb, type: 3}
   moonTurnOn: 1
-  moonRadius: 0.09
-  moonEdgeStrength: 0.44
+  moonRadius: 0.2
+  moonEdgeStrength: 0.4
   moonExposure: 0
-  moonDarkside: 0.01
+  moonDarkside: 0
+  moonTexture1: {fileID: 8900000, guid: 8b6763a3e47f58849bc7a9e22444d6d5, type: 3}
+  moonTurnOn1: 1
+  moonRadius1: 0.1
+  moonEdgeStrength1: 0.4
+  moonExposure1: 0
+  moonDarkside1: 0
+  moonTexture2: {fileID: 8900000, guid: 004cc75ff9e269041824094d4450de02, type: 3}
+  moonTurnOn2: 1
+  moonRadius2: 0.3
+  moonEdgeStrength2: 0.4
+  moonExposure2: 0
+  moonDarkside2: 0
   starCubeMap: {fileID: 8900000, guid: 36906fe4a6110d8489f2f5372b308de6, type: 3}
-  starSpeed: 0
-  starExposure: 5
-  starPower: 2
+  starSpeed: 0.005
+  starExposure: 0
+  starPower: 1.8
   starLatitude: -8
   cloudTurnOn: 1
   cloudCubeMap: {fileID: 8900000, guid: 8c1dd5fe02c248940ad7c289fc9200dc, type: 3}

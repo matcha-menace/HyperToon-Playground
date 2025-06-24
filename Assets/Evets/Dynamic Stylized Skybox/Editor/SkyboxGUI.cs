@@ -3,16 +3,15 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace EvetsVault
+namespace Evets
 {
     public class SkyboxGUI
     {
         public static class Info {
-            private const string Version = "1.0.0";
-            private const string ReleaseDate = "05.30.2025";
+            private const string Version = "1.3.0";
             private const string Message = "by evets.";
     
-            public static readonly string FullInfo = $"{Message} version: {Version} ({ReleaseDate})";
+            public static readonly string FullInfo = $"{Message} {Version}";
         }
         
         public static void DrawLogo()
@@ -57,8 +56,7 @@ namespace EvetsVault
             messageStyle.fontStyle = FontStyle.Bold;
             messageStyle.normal.textColor = new Color(.7f, .7f, .7f);
             
-            string coloredTitle = "<color=#EFEFEF>Eve's</color> " +
-                                  "<color=#7ad8f4>S</color><color=#7acaf4>k</color><color=#7abcf4>y</color>" +
+            string coloredTitle = "<color=#7ad8f4>S</color><color=#7acaf4>k</color><color=#7abcf4>y</color>" +
                                   "<color=#7ab1f4>b</color><color=#7aaaf4>o</color><color=#7a98f4>x</color>";
             EditorGUILayout.LabelField(coloredTitle, titleStyle);
             EditorGUILayout.LabelField(Info.FullInfo, subtitleStyle);
@@ -72,7 +70,7 @@ namespace EvetsVault
         }
     }
     
-    [CustomEditor(typeof(SkyboxSettings))]
+    [CustomEditor(typeof(SkyboxSettings)), CanEditMultipleObjects]
     public class SkyboxEditorInspector : Editor
     {
         private SerializedProperty nightDayGradient;
@@ -91,12 +89,31 @@ namespace EvetsVault
         private SerializedProperty sunTextureStrength;
         private SerializedProperty sunColorCustomizeSwitch;
 
+        // Moons
+        private bool moonFoldout = true;
+        private SerializedProperty moonCount;
         private SerializedProperty moonTurnOn;
         private SerializedProperty moonRadius;
         private SerializedProperty moonEdgeStrength;
         private SerializedProperty moonExposure;
         private SerializedProperty moonDarkside;
         private SerializedProperty moonTexture;
+        
+        private bool moon1Foldout = true;
+        private SerializedProperty moonTurnOn1;
+        private SerializedProperty moonRadius1;
+        private SerializedProperty moonEdgeStrength1;
+        private SerializedProperty moonExposure1;
+        private SerializedProperty moonDarkside1;
+        private SerializedProperty moonTexture1;
+        
+        private bool moon2Foldout = true;
+        private SerializedProperty moonTurnOn2;
+        private SerializedProperty moonRadius2;
+        private SerializedProperty moonEdgeStrength2;
+        private SerializedProperty moonExposure2;
+        private SerializedProperty moonDarkside2;
+        private SerializedProperty moonTexture2;
         
         private SerializedProperty starCubeMap;
         private SerializedProperty starSpeed;
@@ -122,13 +139,30 @@ namespace EvetsVault
             sunTextureStrength = serializedObject.FindProperty("sunTextureStrength");
             sunColorCustomizeSwitch = serializedObject.FindProperty("customizeSunColors");
 
+            // moons
+            moonCount = serializedObject.FindProperty("moonCount");
             moonTurnOn = serializedObject.FindProperty("moonTurnOn");
             moonRadius = serializedObject.FindProperty("moonRadius");
             moonEdgeStrength = serializedObject.FindProperty("moonEdgeStrength");
             moonExposure = serializedObject.FindProperty("moonExposure");
             moonDarkside = serializedObject.FindProperty("moonDarkside");
             moonTexture = serializedObject.FindProperty("moonTexture");
+            
+            moonTurnOn1 = serializedObject.FindProperty("moonTurnOn1");
+            moonRadius1 = serializedObject.FindProperty("moonRadius1");
+            moonEdgeStrength1 = serializedObject.FindProperty("moonEdgeStrength1");
+            moonExposure1 = serializedObject.FindProperty("moonExposure1");
+            moonDarkside1 = serializedObject.FindProperty("moonDarkside1");
+            moonTexture1 = serializedObject.FindProperty("moonTexture1");
+            
+            moonTurnOn2 = serializedObject.FindProperty("moonTurnOn2");
+            moonRadius2 = serializedObject.FindProperty("moonRadius2");
+            moonEdgeStrength2 = serializedObject.FindProperty("moonEdgeStrength2");
+            moonExposure2 = serializedObject.FindProperty("moonExposure2");
+            moonDarkside2 = serializedObject.FindProperty("moonDarkside2");
+            moonTexture2 = serializedObject.FindProperty("moonTexture2");
 
+            // clouds
             cloudTurnOn = serializedObject.FindProperty("cloudTurnOn");
             cloudCubeMap = serializedObject.FindProperty("cloudCubeMap");
             cloudSpeed = serializedObject.FindProperty("cloudSpeed");
@@ -233,15 +267,55 @@ namespace EvetsVault
             EditorGUILayout.HelpBox("Toggles moon visuals and sets appearance details like exposure and edge strength. " +
                                     "You can apply customized moon texture by changing the cubemap.", MessageType.Info);
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(moonTurnOn);
+            EditorGUILayout.PropertyField(moonCount);
             if (moonTurnOn.boolValue)
             {
                 EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(moonTexture);
-                EditorGUILayout.PropertyField(moonRadius);
-                EditorGUILayout.PropertyField(moonEdgeStrength);
-                EditorGUILayout.PropertyField(moonExposure);
-                EditorGUILayout.PropertyField(moonDarkside);
+                moonFoldout = EditorGUILayout.Foldout(moonFoldout, "Moon 0", true);
+                if (moonFoldout)
+                {
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(moonTexture);
+                    EditorGUILayout.PropertyField(moonRadius);
+                    EditorGUILayout.PropertyField(moonEdgeStrength);
+                    EditorGUILayout.PropertyField(moonExposure);
+                    EditorGUILayout.PropertyField(moonDarkside);
+                    EditorGUI.indentLevel--;
+                }
+                EditorGUI.indentLevel--;
+            }
+            
+            if (moonTurnOn1.boolValue)
+            {
+                EditorGUI.indentLevel++;
+                moon1Foldout = EditorGUILayout.Foldout(moon1Foldout, "Moon 1", true);
+                if (moon1Foldout)
+                {
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(moonTexture1);
+                    EditorGUILayout.PropertyField(moonRadius1);
+                    EditorGUILayout.PropertyField(moonEdgeStrength1);
+                    EditorGUILayout.PropertyField(moonExposure1);
+                    EditorGUILayout.PropertyField(moonDarkside1);
+                    EditorGUI.indentLevel--;
+                }
+                EditorGUI.indentLevel--;
+            }
+            
+            if (moonTurnOn2.boolValue)
+            {
+                EditorGUI.indentLevel++;
+                moon2Foldout = EditorGUILayout.Foldout(moon2Foldout, "Moon 2", true);
+                if (moon2Foldout)
+                {
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(moonTexture2);
+                    EditorGUILayout.PropertyField(moonRadius2);
+                    EditorGUILayout.PropertyField(moonEdgeStrength2);
+                    EditorGUILayout.PropertyField(moonExposure2);
+                    EditorGUILayout.PropertyField(moonDarkside2);
+                    EditorGUI.indentLevel--;
+                }
                 EditorGUI.indentLevel--;
             }
             

@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace EvetsVault
+namespace Evets
 {
     [ExecuteAlways] // this script runs in edit mode to see changes to skybox live
     public class SkyboxController : MonoBehaviour
@@ -12,6 +13,8 @@ namespace EvetsVault
         [SerializeField] private SkyboxSettings skyboxSettings;
         [SerializeField] private Transform sun;
         [SerializeField] private Transform moon;
+        [SerializeField] private Transform moon1;
+        [SerializeField] private Transform moon2;
         
         [Header("Main Light")]
         [Tooltip("You can reference your own directional light in scene, " +
@@ -30,6 +33,10 @@ namespace EvetsVault
         private static readonly int SunDir = Shader.PropertyToID("_SunDir");
         private static readonly int MoonDir = Shader.PropertyToID("_MoonDir");
         private static readonly int MoonSpaceMatrix = Shader.PropertyToID("_MoonSpaceMatrix");
+        private static readonly int MoonDir1 = Shader.PropertyToID("_MoonDir1");
+        private static readonly int MoonSpaceMatrix1 = Shader.PropertyToID("_MoonSpaceMatrix1");
+        private static readonly int MoonDir2 = Shader.PropertyToID("_MoonDir2");
+        private static readonly int MoonSpaceMatrix2 = Shader.PropertyToID("_MoonSpaceMatrix2");
 
         private void LateUpdate()
         {
@@ -39,6 +46,14 @@ namespace EvetsVault
             Shader.SetGlobalVector(MoonDir, -moon.forward);
             Shader.SetGlobalMatrix(MoonSpaceMatrix, new Matrix4x4(-moon.forward, 
                 -moon.up, -moon.right, Vector4.zero).transpose);
+            // Moon1
+            Shader.SetGlobalVector(MoonDir1, -moon1.forward);
+            Shader.SetGlobalMatrix(MoonSpaceMatrix1, new Matrix4x4(-moon1.forward, 
+                -moon1.up, -moon1.right, Vector4.zero).transpose);
+            // Moon2
+            Shader.SetGlobalVector(MoonDir2, -moon2.forward);
+            Shader.SetGlobalMatrix(MoonSpaceMatrix2, new Matrix4x4(-moon2.forward, 
+                -moon2.up, -moon2.right, Vector4.zero).transpose);
             
             MatchLighting();
         }

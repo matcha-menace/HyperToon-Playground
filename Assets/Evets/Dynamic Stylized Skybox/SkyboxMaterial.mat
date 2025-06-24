@@ -15,9 +15,10 @@ Material:
   m_InvalidKeywords:
   - _CLOUDBACKON_ON
   - _CLOUDON_ON
+  - _MOONON1_ON
+  - _MOONON2_ON
   - _MOONON_ON
   - _SUNCOLORCUSTOMIZE_ON
-  - _SUNTEXTUREON_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -46,6 +47,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MoonCubeMap:
         m_Texture: {fileID: 8900000, guid: 2c994b41ee22a30418ad058f51c49aeb, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MoonCubeMap1:
+        m_Texture: {fileID: 8900000, guid: 8b6763a3e47f58849bc7a9e22444d6d5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MoonCubeMap2:
+        m_Texture: {fileID: 8900000, guid: 004cc75ff9e269041824094d4450de02, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _StarCubeMap:
@@ -80,20 +89,30 @@ Material:
     - _CloudOpacity: 1
     - _CloudSpeed: 0.001
     - _Cloudiness: 0
-    - _MoonDarkside: 0.01
-    - _MoonEdgeStrength: 0.44
+    - _MoonDarkside: 0
+    - _MoonDarkside1: 0
+    - _MoonDarkside2: 0
+    - _MoonEdgeStrength: 0.4
+    - _MoonEdgeStrength1: 0.4
+    - _MoonEdgeStrength2: 0.4
     - _MoonExposure: 0
+    - _MoonExposure1: 0
+    - _MoonExposure2: 0
     - _MoonOn: 1
-    - _MoonRadius: 0.09
-    - _StarExposure: 5
+    - _MoonOn1: 1
+    - _MoonOn2: 1
+    - _MoonRadius: 0.2
+    - _MoonRadius1: 0.1
+    - _MoonRadius2: 0.3
+    - _StarExposure: 0
     - _StarLatitude: -8
-    - _StarPower: 2
-    - _StarSpeed: 0
+    - _StarPower: 1.8
+    - _StarSpeed: 0.0005
     - _SunColorCustomize: 1
     - _SunIntensity: 4
-    - _SunRadius: 0.1
+    - _SunRadius: 0.12
     - _SunTexture: 0
-    - _SunTextureOn: 1
+    - _SunTextureOn: 0
     - _SunTextureStrength: 0.8
     - _SynthSun: 0
     - _SynthSunBottom: 0.5

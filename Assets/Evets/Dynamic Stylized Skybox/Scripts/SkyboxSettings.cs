@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.Serialization;
 
-namespace EvetsVault
+namespace Evets
 {
     public class SkyboxSettings : ScriptableObject
     {
@@ -17,28 +17,43 @@ namespace EvetsVault
         [SerializeField] private Gradient cloudColorGradient;
         
         // sun
-        [Range(0f, 1f)] [SerializeField] private float sunRadius = .05f;
-        [Range(1f, 4f)] [SerializeField] private float sunIntensity = 1;
+        [Range(0f, 1f)] [SerializeField] private float sunRadius = 0.12f;
+        [Range(1f, 4f)] [SerializeField] private float sunIntensity = 4;
         [SerializeField] private bool customizeSunColors;
         [SerializeField] private bool sunTexture = false;
         [SerializeField] private Cubemap sunCubeMap;
-        [Range(0f, 1f)] [SerializeField] private float sunTextureStrength = 1f;
+        [Range(0f, 1f)] [SerializeField] private float sunTextureStrength = .8f;
         [SerializeField] private bool synthwaveSun = false;
-        [Range(0f, 1f)] [SerializeField] private float synthSunBottom = .6f;
-        [SerializeField] private float synthSunLines = 48;
+        [Range(0f, 1f)] [SerializeField] private float synthSunBottom = .5f;
+        [SerializeField] private float synthSunLines = 64;
         // moon
+        [Range(0, 3)] [SerializeField] private int moonCount = 1;
         [SerializeField] private Cubemap moonTexture;
         [SerializeField] private bool moonTurnOn = true;
-        [Range(0f, 1f)] [SerializeField] private float moonRadius = .05f;
-        [Range(0.01f, 1f)] [SerializeField] private float moonEdgeStrength = .05f;
+        [Range(0f, 1f)] [SerializeField] private float moonRadius = .3f;
+        [Range(0.01f, 1f)] [SerializeField] private float moonEdgeStrength = .4f;
         [Range(-16, 0)] [SerializeField] private float moonExposure = 0;
-        [Range(0, .9f)] [SerializeField] private float moonDarkside = .01f;
+        [Range(0, .9f)] [SerializeField] private float moonDarkside = 0;
+        
+        [SerializeField] private Cubemap moonTexture1;
+        [SerializeField] private bool moonTurnOn1 = true;
+        [Range(0f, 1f)] [SerializeField] private float moonRadius1 = .3f;
+        [Range(0.01f, 1f)] [SerializeField] private float moonEdgeStrength1 = .4f;
+        [Range(-16, 0)] [SerializeField] private float moonExposure1 = 0;
+        [Range(0, .9f)] [SerializeField] private float moonDarkside1 = 0;
+        
+        [SerializeField] private Cubemap moonTexture2;
+        [SerializeField] private bool moonTurnOn2 = true;
+        [Range(0f, 1f)] [SerializeField] private float moonRadius2 = .3f;
+        [Range(0.01f, 1f)] [SerializeField] private float moonEdgeStrength2 = .4f;
+        [Range(-16, 0)] [SerializeField] private float moonExposure2 = 0;
+        [Range(0, .9f)] [SerializeField] private float moonDarkside2 = 0;
         // stars
         [SerializeField] private Cubemap starCubeMap;
-        [Range(0f, .1f)] [SerializeField] private float starSpeed = .01f;
-        [Range(-16, 16)] [SerializeField] private int starExposure = 3;
-        [Range(1f, 5f)] [SerializeField] private float starPower = 2;
-        [Range(-90, 90)] [SerializeField] private int starLatitude = -30;
+        [Range(0f, .1f)] [SerializeField] private float starSpeed = .005f;
+        [Range(-16, 16)] [SerializeField] private int starExposure = 0;
+        [Range(1f, 5f)] [SerializeField] private float starPower = 1.8f;
+        [Range(-90, 90)] [SerializeField] private int starLatitude = -8;
         // clouds
         [SerializeField] private bool cloudTurnOn = true;
         [SerializeField] private Cubemap cloudCubeMap;
@@ -48,7 +63,7 @@ namespace EvetsVault
 
         private void OnValidate()
         {
-            if (RenderSettings.skybox.shader.name != "EvetsVault/Skybox")
+            if (RenderSettings.skybox.shader.name != "Evets/Skybox")
             {
                 Debug.Log("Evets Skybox: make sure to use correct material for skybox!");
                 return;
@@ -69,12 +84,30 @@ namespace EvetsVault
             RenderSettings.skybox.SetFloat("_SynthSunBottom", synthSunBottom);
             RenderSettings.skybox.SetFloat("_SynthSunLines", synthSunLines);
             
+            moonTurnOn = moonCount > 0;
+            moonTurnOn1 = moonCount > 1;
+            moonTurnOn2 = moonCount > 2;
+            
             RenderSettings.skybox.SetFloat("_MoonOn", moonTurnOn ? 1 : 0);
             RenderSettings.skybox.SetFloat("_MoonRadius", moonRadius);
             RenderSettings.skybox.SetFloat("_MoonEdgeStrength", moonEdgeStrength);
             RenderSettings.skybox.SetFloat("_MoonExposure", moonExposure);
             RenderSettings.skybox.SetFloat("_MoonDarkside", moonDarkside);
             RenderSettings.skybox.SetTexture("_MoonCubeMap", moonTexture);
+            
+            RenderSettings.skybox.SetFloat("_MoonOn1", moonTurnOn1 ? 1 : 0);
+            RenderSettings.skybox.SetFloat("_MoonRadius1", moonRadius1);
+            RenderSettings.skybox.SetFloat("_MoonEdgeStrength1", moonEdgeStrength1);
+            RenderSettings.skybox.SetFloat("_MoonExposure1", moonExposure1);
+            RenderSettings.skybox.SetFloat("_MoonDarkside1", moonDarkside1);
+            RenderSettings.skybox.SetTexture("_MoonCubeMap1", moonTexture1);
+            
+            RenderSettings.skybox.SetFloat("_MoonOn2", moonTurnOn2 ? 1 : 0);
+            RenderSettings.skybox.SetFloat("_MoonRadius2", moonRadius2);
+            RenderSettings.skybox.SetFloat("_MoonEdgeStrength2", moonEdgeStrength2);
+            RenderSettings.skybox.SetFloat("_MoonExposure2", moonExposure2);
+            RenderSettings.skybox.SetFloat("_MoonDarkside2", moonDarkside2);
+            RenderSettings.skybox.SetTexture("_MoonCubeMap2", moonTexture2);
             
             RenderSettings.skybox.SetTexture("_StarCubeMap", starCubeMap);
             RenderSettings.skybox.SetFloat("_StarSpeed", starSpeed * .1f);
