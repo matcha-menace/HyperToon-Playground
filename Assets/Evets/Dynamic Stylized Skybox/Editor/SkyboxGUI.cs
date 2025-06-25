@@ -8,7 +8,7 @@ namespace Evets
     public class SkyboxGUI
     {
         public static class Info {
-            private const string Version = "1.3.0";
+            private const string Version = "1.3";
             private const string Message = "by evets.";
     
             public static readonly string FullInfo = $"{Message} {Version}";
@@ -357,18 +357,22 @@ namespace Evets
     {
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
-            // base.OnGUI(materialEditor, properties);
             GUIStyle titleStyle = new GUIStyle();
             titleStyle.fontSize = 12;
             titleStyle.fontStyle = FontStyle.Bold;
-            titleStyle.normal.textColor = new Color(.7f, .7f, .7f);
+            titleStyle.normal.textColor = new Color(1f, .8f, .5f);
             
             EditorGUI.indentLevel = 0;
             GUILayout.Space(20);
             GUIContent warningIcon = EditorGUIUtility.IconContent("console.warnicon.sml");
             GUILayout.Label(warningIcon, GUILayout.Width(20), GUILayout.Height(20));
             GUILayout.Label(
-                "This material is controlled by the Evets_SkyboxSettings ScriptableObject.\nPlease make changes there.", titleStyle);
+                "This material is controlled by the SkyboxSettings ScriptableObject.", titleStyle);
+            GUILayout.Label("It is HIGHLY RECOMMENDED to make changes there.", titleStyle);
+            GUILayout.Label("", GUI.skin.horizontalSlider);
+            
+            GUILayout.Space(20);
+            base.OnGUI(materialEditor, properties);
         }
     }
 }

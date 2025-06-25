@@ -23,14 +23,14 @@ Shader "Evets/Skybox"
         _MoonEdgeStrength ("Moon edge strength", Range(0.01, 1)) = 0.5
         _MoonExposure ("Moon exposure", Range(-16, 0)) = 0
         _MoonDarkside ("Moon darkside", Range(0, 1)) = 0.5
-        
+        // Moon 1
         [NoScaleOffset] _MoonCubeMap1 ("Moon cube map", Cube) = "black" {}
         [MaterialToggle] _MoonOn1("Moon On", Float) = 1
         _MoonRadius1 ("Moon radius", Range(0, 1)) = 0.05
         _MoonEdgeStrength1 ("Moon edge strength", Range(0.01, 1)) = 0.5
         _MoonExposure1 ("Moon exposure", Range(-16, 0)) = 0
         _MoonDarkside1 ("Moon darkside", Range(0, 1)) = 0.5
-        
+        // Moon 2
         [NoScaleOffset] _MoonCubeMap2 ("Moon cube map", Cube) = "black" {}
         [MaterialToggle] _MoonOn2("Moon On", Float) = 1
         _MoonRadius2 ("Moon radius", Range(0, 1)) = 0.05
@@ -375,6 +375,6 @@ Shader "Evets/Skybox"
             ENDHLSL
         }
     }
-    CustomEditor "EvetsVault.CustomSkyboxShaderGUI"
+    CustomEditor "Evets.CustomSkyboxShaderGUI"
     Fallback "Skybox/Procedural"
 }

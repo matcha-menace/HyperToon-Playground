@@ -10,6 +10,8 @@ namespace Evets
     public class SkyboxController : MonoBehaviour
     {
         [Header("References")]
+        // !!! important, required for skybox to function as default
+        // Celestial bodies in skybox follows the rotation of these transforms
         [SerializeField] private SkyboxSettings skyboxSettings;
         [SerializeField] private Transform sun;
         [SerializeField] private Transform moon;
@@ -30,6 +32,7 @@ namespace Evets
         [SerializeField] private float sunsetLeewayAngle = 30;
         
         private float intensityMultiplier;
+        // shader values
         private static readonly int SunDir = Shader.PropertyToID("_SunDir");
         private static readonly int MoonDir = Shader.PropertyToID("_MoonDir");
         private static readonly int MoonSpaceMatrix = Shader.PropertyToID("_MoonSpaceMatrix");
@@ -40,28 +43,25 @@ namespace Evets
 
         private void LateUpdate()
         {
-            // Sun
-            Shader.SetGlobalVector(SunDir, -sun.forward);
-            // Moon
-            Shader.SetGlobalVector(MoonDir, -moon.forward);
+            // update shader values for each celestial body following their respective transforms
+            Shader.SetGlobalVector(SunDir, -sun.forward); // Sun
+            Shader.SetGlobalVector(MoonDir, -moon.forward); // Moon
             Shader.SetGlobalMatrix(MoonSpaceMatrix, new Matrix4x4(-moon.forward, 
-                -moon.up, -moon.right, Vector4.zero).transpose);
-            // Moon1
-            Shader.SetGlobalVector(MoonDir1, -moon1.forward);
+                -moon.up, -moon.right, Vector4.zero).transpose); // Moon
+            Shader.SetGlobalVector(MoonDir1, -moon1.forward); // Moon1
             Shader.SetGlobalMatrix(MoonSpaceMatrix1, new Matrix4x4(-moon1.forward, 
-                -moon1.up, -moon1.right, Vector4.zero).transpose);
-            // Moon2
-            Shader.SetGlobalVector(MoonDir2, -moon2.forward);
+                -moon1.up, -moon1.right, Vector4.zero).transpose); // Moon1
+            Shader.SetGlobalVector(MoonDir2, -moon2.forward); // Moon2
             Shader.SetGlobalMatrix(MoonSpaceMatrix2, new Matrix4x4(-moon2.forward, 
-                -moon2.up, -moon2.right, Vector4.zero).transpose);
+                -moon2.up, -moon2.right, Vector4.zero).transpose); // Moon2
             
+            // match directional light to the current dominant celestial body
             MatchLighting();
         }
 
         private void MatchLighting()
         {
             if (!directionalLight) return;
-            
             // angle < 90 means below horizon
             float currentSunAngle = Vector3.Angle(Vector3.up, sun.forward);
             float t = (currentSunAngle - sunsetThresholdAngle) / sunsetLeewayAngle;
@@ -69,16 +69,12 @@ namespace Evets
             // switch to moon as main light when sun is down
             // incorrect (sun is still lighting the scene) main light when both are down
             directionalLight.intensity = Mathf.Lerp(0.01f, 1, t);
-            if (directionalLight.intensity < .2f && Vector3.Angle(Vector3.up, moon.forward) > 90)
-            {
+            if (directionalLight.intensity < .2f && Vector3.Angle(Vector3.up, moon.forward) > 90) 
                 directionalLight.transform.rotation = moon.rotation;
-            }
-            else
-            {
-                directionalLight.transform.rotation = sun.rotation;
-            }
+            else directionalLight.transform.rotation = sun.rotation;
             
             if (!skyboxSettings) return;
+            // reduce intensity of directional light based on cloudiness
             directionalLight.intensity *= Mathf.Lerp(1, .7f, skyboxSettings.cloudiness);
         }
     }

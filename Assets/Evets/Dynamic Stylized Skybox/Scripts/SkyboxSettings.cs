@@ -63,12 +63,12 @@ namespace Evets
 
         private void OnValidate()
         {
+            // refresh shader values on validation
             if (RenderSettings.skybox.shader.name != "Evets/Skybox")
             {
                 Debug.Log("Evets Skybox: make sure to use correct material for skybox!");
                 return;
             }
-
             SetSkyboxValues();
         }
 
