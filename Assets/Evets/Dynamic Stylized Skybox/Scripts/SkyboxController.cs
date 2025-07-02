@@ -9,10 +9,12 @@ namespace Evets
     [ExecuteAlways] // this script runs in edit mode to see changes to skybox live
     public class SkyboxController : MonoBehaviour
     {
+        [Header("Settings")]
+        [SerializeField] private SkyboxSettings skyboxSettings;
+        
         [Header("References")]
         // !!! important, required for skybox to function as default
         // Celestial bodies in skybox follows the rotation of these transforms
-        [SerializeField] private SkyboxSettings skyboxSettings;
         [SerializeField] private Transform sun;
         [SerializeField] private Transform moon;
         [SerializeField] private Transform moon1;
@@ -61,7 +63,11 @@ namespace Evets
 
         private void MatchLighting()
         {
-            if (!directionalLight) return;
+            if (!directionalLight)
+            {
+                Debug.LogWarning("Remember to assign a directional light in the SkyboxController component to match the lighting with the skybox's visuals");
+                return;
+            }
             // angle < 90 means below horizon
             float currentSunAngle = Vector3.Angle(Vector3.up, sun.forward);
             float t = (currentSunAngle - sunsetThresholdAngle) / sunsetLeewayAngle;
@@ -69,8 +75,18 @@ namespace Evets
             // switch to moon as main light when sun is down
             // incorrect (sun is still lighting the scene) main light when both are down
             directionalLight.intensity = Mathf.Lerp(0.01f, 1, t);
-            if (directionalLight.intensity < .2f && Vector3.Angle(Vector3.up, moon.forward) > 90) 
-                directionalLight.transform.rotation = moon.rotation;
+            var moonAngle = Vector3.Angle(Vector3.up, moon.forward);
+            var moon1Angle = Vector3.Angle(Vector3.up, moon1.forward);
+            var moon2Angle = Vector3.Angle(Vector3.up, moon2.forward);
+            if (directionalLight.intensity < .2f && (moonAngle > 90 || moon1Angle > 90 || moon2Angle > 90))
+            {
+                if (moonAngle > 90)
+                    directionalLight.transform.rotation = moon.rotation;
+                else if (moon1Angle > 90)
+                    directionalLight.transform.rotation = moon1.rotation;
+                else if (moon2Angle > 90)
+                    directionalLight.transform.rotation = moon2.rotation;
+            }
             else directionalLight.transform.rotation = sun.rotation;
             
             if (!skyboxSettings) return;

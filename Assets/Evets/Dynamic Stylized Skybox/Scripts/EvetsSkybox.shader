@@ -37,14 +37,15 @@ Shader "Evets/Skybox"
         _MoonEdgeStrength2 ("Moon edge strength", Range(0.01, 1)) = 0.5
         _MoonExposure2 ("Moon exposure", Range(-16, 0)) = 0
         _MoonDarkside2 ("Moon darkside", Range(0, 1)) = 0.5
-        // Day
+        // Clouds
         [NoScaleOffset] _CloudGrad ("Cloud color gradient", 2D) = "white" {}
         [NoScaleOffset] _CloudCubeMap ("Cloud cube map", Cube) = "black" {}
         [MaterialToggle] _CloudOn("Cloud On", Float) = 1
+        _CloudAlpha ("Cloud alpha", Range(0.2, 1)) = 0.6
         _CloudSpeed ("Cloud speed", Float) = 0.001
         [NoScaleOffset] _CloudBackCubeMap ("Cloud cube map", Cube) = "black" {}
         _Cloudiness ("Cloudiness", Range(0, 1)) = 0.5
-        // Night
+        // Stars
         [NoScaleOffset] _StarCubeMap ("Star cube map", Cube) = "black" {}
         _StarExposure ("Star exposure", Range(-16, 16)) = 0
         _StarPower ("Star power", Range(1, 5)) = 1
@@ -150,7 +151,7 @@ Shader "Evets/Skybox"
             float _StarExposure, _StarPower;
             float _StarLatitude, _StarSpeed;
 
-            float _CloudSpeed, _CloudOn, _Cloudiness;
+            float _CloudSpeed, _CloudOn, _CloudAlpha, _Cloudiness;
 
             float GetSunMask(float sunViewDot, float sunRadius)
             {
@@ -268,7 +269,7 @@ Shader "Evets/Skybox"
                 float3 sunColor = sunOverlayColor * sunMask * sunTexture;
 
                 // The moon
-                float moonIntersect = SphereIntersect(viewDir, _MoonDir, _MoonRadius) - _MoonRadius;
+                float moonIntersect = SphereIntersect(viewDir, _MoonDir, _MoonRadius);
                 float moonMask = moonIntersect > -1 ? 1 : 0;
                 float3 moonNormal = normalize(_MoonDir - viewDir * moonIntersect);
                 float moonNdotL = saturate(dot(moonNormal, -_SunDir));
@@ -279,7 +280,7 @@ Shader "Evets/Skybox"
                 moonColor *= _MoonOn;
 
                 // The moon1
-                float moonIntersect1 = SphereIntersect(viewDir, _MoonDir1, _MoonRadius1) - _MoonRadius1;
+                float moonIntersect1 = SphereIntersect(viewDir, _MoonDir1, _MoonRadius1);
                 float moonMask1 = moonIntersect1 > -1 ? 1 - moonMask : 0;
                 float3 moonNormal1 = normalize(_MoonDir1 - viewDir * moonIntersect1);
                 float moonNdotL1 = saturate(dot(moonNormal1, -_SunDir));
@@ -290,7 +291,7 @@ Shader "Evets/Skybox"
                 moonColor1 *= _MoonOn1;
 
                 // The moon2
-                float moonIntersect2 = SphereIntersect(viewDir, _MoonDir2, _MoonRadius2) - _MoonRadius2;
+                float moonIntersect2 = SphereIntersect(viewDir, _MoonDir2, _MoonRadius2);
                 float moonMask2 = moonIntersect2 > -1 ? 1 - moonMask - moonMask1 : 0;
                 float3 moonNormal2 = normalize(_MoonDir2 - viewDir * moonIntersect2);
                 float moonNdotL2 = saturate(dot(moonNormal2, -_SunDir));
@@ -305,11 +306,11 @@ Shader "Evets/Skybox"
                 // clouds
                 float3 cloudUVW = GetStarUVW(viewDir, 90, _Time.y * _CloudSpeed % 1);
                 float3 cloudColor = SAMPLE_TEXTURECUBE_BIAS(_CloudCubeMap, sampler_CloudCubeMap, cloudUVW, -1).rgb;
-                cloudColor *= _CloudOn;
+                cloudColor *= _CloudOn * _CloudAlpha;
                 // clouds back
                 float3 cloudBackUVW = GetStarUVW(viewDir, 90, _Time.y * (_CloudSpeed / 4) % 1);
                 float3 cloudBackColor = SAMPLE_TEXTURECUBE_BIAS(_CloudBackCubeMap, sampler_CloudBackCubeMap, cloudBackUVW, -1).rgb;
-                cloudBackColor *= _Cloudiness * _CloudOn;
+                cloudBackColor *= _Cloudiness * _CloudAlpha * _CloudOn;
 
                 // cloud blocking
                 float3 cloudBlocking = 1 - smoothstep(0.01, .1, cloudColor + cloudBackColor);

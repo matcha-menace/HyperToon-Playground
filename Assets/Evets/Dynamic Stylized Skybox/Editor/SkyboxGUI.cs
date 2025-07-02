@@ -8,7 +8,7 @@ namespace Evets
     public class SkyboxGUI
     {
         public static class Info {
-            private const string Version = "1.3";
+            private const string Version = "1.3.2";
             private const string Message = "by evets.";
     
             public static readonly string FullInfo = $"{Message} {Version}";
@@ -73,6 +73,11 @@ namespace Evets
     [CustomEditor(typeof(SkyboxSettings)), CanEditMultipleObjects]
     public class SkyboxEditorInspector : Editor
     {
+        private bool sunFoldout = true;
+        private bool moonGeneralFoldout = true;
+        private bool cloudFoldout = true;
+        private bool starFoldout = true;
+        
         private SerializedProperty nightDayGradient;
         private SerializedProperty horizonZenithGradient;
         private SerializedProperty sunHaloGradient;
@@ -122,6 +127,7 @@ namespace Evets
         private SerializedProperty starLatitude;
 
         private SerializedProperty cloudTurnOn;
+        private SerializedProperty cloudAlpha;
         private SerializedProperty cloudCubeMap;
         private SerializedProperty cloudSpeed;
         private SerializedProperty cloudBackCubeMap;
@@ -164,6 +170,7 @@ namespace Evets
 
             // clouds
             cloudTurnOn = serializedObject.FindProperty("cloudTurnOn");
+            cloudAlpha = serializedObject.FindProperty("cloudAlpha");
             cloudCubeMap = serializedObject.FindProperty("cloudCubeMap");
             cloudSpeed = serializedObject.FindProperty("cloudSpeed");
             cloudBackCubeMap = serializedObject.FindProperty("cloudBackCubeMap");
@@ -229,91 +236,101 @@ namespace Evets
 
             // --- SUN ---
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Sun", EditorStyles.boldLabel);
+            sunFoldout = EditorGUILayout.Foldout(sunFoldout, "Sun", true, new GUIStyle(EditorStyles.foldout) {fontStyle = FontStyle.Bold});
             EditorGUILayout.HelpBox("Controls sun visuals and intensity.", MessageType.Info);
-            EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(sunRadius);
-            EditorGUILayout.PropertyField(sunIntensity);
-            EditorGUILayout.PropertyField(sunColorCustomizeSwitch);
-            if (!sunColorCustomizeSwitch.boolValue)
+            if (sunFoldout)
             {
                 EditorGUI.indentLevel++;
-                EditorGUILayout.HelpBox("Sun colors are controlled by Directional Light color by default", MessageType.None);
+                EditorGUILayout.Space();
+                EditorGUILayout.PropertyField(sunRadius);
+                EditorGUILayout.PropertyField(sunIntensity);
+                EditorGUILayout.PropertyField(sunColorCustomizeSwitch);
+                if (!sunColorCustomizeSwitch.boolValue)
+                {
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.HelpBox("Sun colors are controlled by Directional Light color by default", MessageType.None);
+                    EditorGUI.indentLevel--;
+                }
+                EditorGUILayout.PropertyField(sunTextureSwitch);
+                if (sunTextureSwitch.boolValue)
+                {
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(sunTexture);
+                    EditorGUILayout.PropertyField(sunTextureStrength);
+                    EditorGUI.indentLevel--;
+                }
+                EditorGUILayout.PropertyField(synthwaveSun);
+                EditorGUI.indentLevel++;
+                EditorGUILayout.HelpBox("Synthwave Sun effect only applies when the sun is at a low angle.", MessageType.None);
                 EditorGUI.indentLevel--;
-            }
-            EditorGUILayout.PropertyField(sunTextureSwitch);
-            if (sunTextureSwitch.boolValue)
-            {
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(sunTexture);
-                EditorGUILayout.PropertyField(sunTextureStrength);
-                EditorGUI.indentLevel--;
-            }
-            EditorGUILayout.PropertyField(synthwaveSun);
-            EditorGUI.indentLevel++;
-            EditorGUILayout.HelpBox("Synthwave Sun effect only applies when the sun is at a low angle.", MessageType.None);
-            EditorGUI.indentLevel--;
-            if (synthwaveSun.boolValue)
-            {
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(synthSunBottom);
-                EditorGUILayout.PropertyField(synthSunLines);
+                if (synthwaveSun.boolValue)
+                {
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(synthSunBottom);
+                    EditorGUILayout.PropertyField(synthSunLines);
+                    EditorGUI.indentLevel--;
+                }
                 EditorGUI.indentLevel--;
             }
 
             // --- MOON ---
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Moon", EditorStyles.boldLabel);
+            moonGeneralFoldout = EditorGUILayout.Foldout(moonGeneralFoldout, "Moon", true, new GUIStyle(EditorStyles.foldout) {fontStyle = FontStyle.Bold});
             EditorGUILayout.HelpBox("Toggles moon visuals and sets appearance details like exposure and edge strength. " +
                                     "You can apply customized moon texture by changing the cubemap.", MessageType.Info);
-            EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(moonCount);
-            if (moonTurnOn.boolValue)
+            if (moonGeneralFoldout)
             {
                 EditorGUI.indentLevel++;
-                moonFoldout = EditorGUILayout.Foldout(moonFoldout, "Moon 0", true);
-                if (moonFoldout)
+                EditorGUILayout.Space();
+                EditorGUILayout.PropertyField(moonCount);
+                if (moonTurnOn.boolValue)
                 {
                     EditorGUI.indentLevel++;
-                    EditorGUILayout.PropertyField(moonTexture);
-                    EditorGUILayout.PropertyField(moonRadius);
-                    EditorGUILayout.PropertyField(moonEdgeStrength);
-                    EditorGUILayout.PropertyField(moonExposure);
-                    EditorGUILayout.PropertyField(moonDarkside);
+                    moonFoldout = EditorGUILayout.Foldout(moonFoldout, "Moon 0", true);
+                    if (moonFoldout)
+                    {
+                        EditorGUI.indentLevel++;
+                        EditorGUILayout.PropertyField(moonTexture);
+                        EditorGUILayout.PropertyField(moonRadius);
+                        EditorGUILayout.PropertyField(moonEdgeStrength);
+                        EditorGUILayout.PropertyField(moonExposure);
+                        EditorGUILayout.PropertyField(moonDarkside);
+                        EditorGUI.indentLevel--;
+                    }
                     EditorGUI.indentLevel--;
                 }
-                EditorGUI.indentLevel--;
-            }
-            
-            if (moonTurnOn1.boolValue)
-            {
-                EditorGUI.indentLevel++;
-                moon1Foldout = EditorGUILayout.Foldout(moon1Foldout, "Moon 1", true);
-                if (moon1Foldout)
+                
+                if (moonTurnOn1.boolValue)
                 {
                     EditorGUI.indentLevel++;
-                    EditorGUILayout.PropertyField(moonTexture1);
-                    EditorGUILayout.PropertyField(moonRadius1);
-                    EditorGUILayout.PropertyField(moonEdgeStrength1);
-                    EditorGUILayout.PropertyField(moonExposure1);
-                    EditorGUILayout.PropertyField(moonDarkside1);
+                    moon1Foldout = EditorGUILayout.Foldout(moon1Foldout, "Moon 1", true);
+                    if (moon1Foldout)
+                    {
+                        EditorGUI.indentLevel++;
+                        EditorGUILayout.PropertyField(moonTexture1);
+                        EditorGUILayout.PropertyField(moonRadius1);
+                        EditorGUILayout.PropertyField(moonEdgeStrength1);
+                        EditorGUILayout.PropertyField(moonExposure1);
+                        EditorGUILayout.PropertyField(moonDarkside1);
+                        EditorGUI.indentLevel--;
+                    }
                     EditorGUI.indentLevel--;
                 }
-                EditorGUI.indentLevel--;
-            }
-            
-            if (moonTurnOn2.boolValue)
-            {
-                EditorGUI.indentLevel++;
-                moon2Foldout = EditorGUILayout.Foldout(moon2Foldout, "Moon 2", true);
-                if (moon2Foldout)
+                
+                if (moonTurnOn2.boolValue)
                 {
                     EditorGUI.indentLevel++;
-                    EditorGUILayout.PropertyField(moonTexture2);
-                    EditorGUILayout.PropertyField(moonRadius2);
-                    EditorGUILayout.PropertyField(moonEdgeStrength2);
-                    EditorGUILayout.PropertyField(moonExposure2);
-                    EditorGUILayout.PropertyField(moonDarkside2);
+                    moon2Foldout = EditorGUILayout.Foldout(moon2Foldout, "Moon 2", true);
+                    if (moon2Foldout)
+                    {
+                        EditorGUI.indentLevel++;
+                        EditorGUILayout.PropertyField(moonTexture2);
+                        EditorGUILayout.PropertyField(moonRadius2);
+                        EditorGUILayout.PropertyField(moonEdgeStrength2);
+                        EditorGUILayout.PropertyField(moonExposure2);
+                        EditorGUILayout.PropertyField(moonDarkside2);
+                        EditorGUI.indentLevel--;
+                    }
                     EditorGUI.indentLevel--;
                 }
                 EditorGUI.indentLevel--;
@@ -321,32 +338,42 @@ namespace Evets
             
             // --- STARS ---
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Stars", EditorStyles.boldLabel);
+            starFoldout = EditorGUILayout.Foldout(starFoldout, "Stars", true, new GUIStyle(EditorStyles.foldout) {fontStyle = FontStyle.Bold});
             EditorGUILayout.HelpBox("Stars will only show up when sun is at low or negative angles. " +
                                     "Alternatively you can use your own custom cubemap for stars.", MessageType.Info);
-            EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(starCubeMap);
-            EditorGUILayout.PropertyField(starSpeed);
-            EditorGUILayout.PropertyField(starExposure);
-            EditorGUILayout.PropertyField(starPower);
-            EditorGUILayout.PropertyField(starLatitude);
+            if (starFoldout)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.Space();
+                EditorGUILayout.PropertyField(starCubeMap);
+                EditorGUILayout.PropertyField(starSpeed);
+                EditorGUILayout.PropertyField(starExposure);
+                EditorGUILayout.PropertyField(starPower);
+                EditorGUILayout.PropertyField(starLatitude);
+                EditorGUI.indentLevel--;
+            }
             
             // --- CLOUDS ---
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Clouds", EditorStyles.boldLabel);
+            cloudFoldout = EditorGUILayout.Foldout(cloudFoldout, "Clouds", true, new GUIStyle(EditorStyles.foldout) {fontStyle = FontStyle.Bold});
             EditorGUILayout.HelpBox("Cloud using 2 layers of cubemaps. Adjust speed and density here. " +
                                     "Each layer can be adjusted separately with your custom cubemaps.", MessageType.Info);
-            EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(cloudTurnOn);
-            if (cloudTurnOn.boolValue)
+            if (cloudFoldout)
             {
                 EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(cloudCubeMap);
-                EditorGUILayout.PropertyField(cloudBackCubeMap);
-                EditorGUILayout.PropertyField(cloudiness);
-                EditorGUILayout.PropertyField(cloudSpeed);
+                EditorGUILayout.Space();
+                EditorGUILayout.PropertyField(cloudTurnOn);
+                if (cloudTurnOn.boolValue)
+                {
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(cloudAlpha);
+                    EditorGUILayout.PropertyField(cloudCubeMap);
+                    EditorGUILayout.PropertyField(cloudBackCubeMap);
+                    EditorGUILayout.PropertyField(cloudiness);
+                    EditorGUILayout.PropertyField(cloudSpeed);
+                    EditorGUI.indentLevel--;
+                }
                 EditorGUI.indentLevel--;
-            
             }
 
             serializedObject.ApplyModifiedProperties();

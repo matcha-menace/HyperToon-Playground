@@ -83,6 +83,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _CloudAlpha: 0.6
     - _CloudBackOn: 0
     - _CloudBackSpeed: 0.0002
     - _CloudOn: 1

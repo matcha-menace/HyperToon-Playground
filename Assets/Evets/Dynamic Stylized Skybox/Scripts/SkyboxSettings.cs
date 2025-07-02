@@ -56,6 +56,7 @@ namespace Evets
         [Range(-90, 90)] [SerializeField] private int starLatitude = -8;
         // clouds
         [SerializeField] private bool cloudTurnOn = true;
+        [Range(0.2f, 1f)] [SerializeField] private float cloudAlpha = 0.6f;
         [SerializeField] private Cubemap cloudCubeMap;
         [SerializeField] private Cubemap cloudBackCubeMap;
         [Range(0f, .1f)] [SerializeField] private float cloudSpeed = .01f;
@@ -118,6 +119,7 @@ namespace Evets
             RenderSettings.skybox.SetTexture("_CloudCubeMap", cloudCubeMap);
             RenderSettings.skybox.SetFloat("_CloudSpeed", cloudSpeed * .1f);
             RenderSettings.skybox.SetFloat("_CloudOn", cloudTurnOn ? 1 : 0);
+            RenderSettings.skybox.SetFloat("_CloudAlpha", cloudAlpha);
             RenderSettings.skybox.SetTexture("_CloudBackCubeMap", cloudBackCubeMap);
             RenderSettings.skybox.SetFloat("_Cloudiness", cloudiness);
         }
