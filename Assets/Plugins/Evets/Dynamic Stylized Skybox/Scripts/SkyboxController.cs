@@ -21,9 +21,17 @@ namespace Evets
         [SerializeField] private Transform moon2;
         
         [Header("Main Light")]
+        [SerializeField] private bool isMatchingDirectionalLightWithSun = true;
         [Tooltip("You can reference your own directional light in scene, " +
                  "directional light will always match the angle of the dominant celestial body that is currently in a positive angle (above horizon).")]
         [SerializeField] private Light directionalLight;
+        [SerializeField] private float directionalLightMatchingSpeed = 10f;
+        
+        [Header("Sun Rotation")]
+        [SerializeField] private bool isRotatingSun = true;
+        [Tooltip("Day time in hours, used to calculate the rotation of the sun. " +
+                 "The sun will rotate around the Y axis, while the moon will rotate around the Z axis.")]
+        [SerializeField] private float dayTime = 16f; // 16 hours for a full rotation, default is 24 hours
         
         [Header("Sunset Angles (degrees)")]
         [Tooltip("Sunset angle dictates when the sun is considered to be below the horizon. " +
@@ -42,6 +50,11 @@ namespace Evets
         private static readonly int MoonSpaceMatrix1 = Shader.PropertyToID("_MoonSpaceMatrix1");
         private static readonly int MoonDir2 = Shader.PropertyToID("_MoonDir2");
         private static readonly int MoonSpaceMatrix2 = Shader.PropertyToID("_MoonSpaceMatrix2");
+        
+        private void Update()
+        {
+            if (Application.isPlaying && isRotatingSun) RotateSun(360f, dayTime * 60f);
+        }
 
         private void LateUpdate()
         {
@@ -58,7 +71,7 @@ namespace Evets
                 -moon2.up, -moon2.right, Vector4.zero).transpose); // Moon2
             
             // match directional light to the current dominant celestial body
-            MatchLighting();
+            if (isMatchingDirectionalLightWithSun) MatchLighting();
         }
 
         private void MatchLighting()
@@ -73,25 +86,33 @@ namespace Evets
             float t = (currentSunAngle - sunsetThresholdAngle) / sunsetLeewayAngle;
 
             // switch to moon as main light when sun is down
-            // incorrect (sun is still lighting the scene) main light when both are down
             directionalLight.intensity = Mathf.Lerp(0.01f, 1, t);
-            var moonAngle = Vector3.Angle(Vector3.up, moon.forward);
-            var moon1Angle = Vector3.Angle(Vector3.up, moon1.forward);
-            var moon2Angle = Vector3.Angle(Vector3.up, moon2.forward);
-            if (directionalLight.intensity < .2f && (moonAngle > 90 || moon1Angle > 90 || moon2Angle > 90))
+            var targetRotation = sun.rotation;
+            
+            var isMoonAbove = Vector3.Dot(moon.forward, Vector3.down) > 0;
+            var isMoon1Above = Vector3.Dot(moon1.forward, Vector3.down) > 0;
+            var isMoon2Above = Vector3.Dot(moon2.forward, Vector3.down) > 0;
+            
+            if (Vector3.Dot(sun.forward, Vector3.down) < 0)
             {
-                if (moonAngle > 90)
-                    directionalLight.transform.rotation = moon.rotation;
-                else if (moon1Angle > 90)
-                    directionalLight.transform.rotation = moon1.rotation;
-                else if (moon2Angle > 90)
-                    directionalLight.transform.rotation = moon2.rotation;
+                if (isMoonAbove) targetRotation = moon.rotation;
+                else if (isMoon1Above) targetRotation = moon1.rotation;
+                else if (isMoon2Above) targetRotation = moon2.rotation;
             }
-            else directionalLight.transform.rotation = sun.rotation;
+    
+            directionalLight.transform.rotation = Quaternion.Lerp(directionalLight.transform.rotation, targetRotation,
+                directionalLightMatchingSpeed * Time.deltaTime);
             
             if (!skyboxSettings) return;
             // reduce intensity of directional light based on cloudiness
             directionalLight.intensity *= Mathf.Lerp(1, .7f, skyboxSettings.cloudiness);
+        }
+        
+        private void RotateSun(float degree, float duration)
+        {
+            //sun rotation
+            float sunRotateSpeed = degree / duration;
+            sun.localRotation *= Quaternion.AngleAxis(sunRotateSpeed * Time.deltaTime, Vector3.right);
         }
     }
 }
