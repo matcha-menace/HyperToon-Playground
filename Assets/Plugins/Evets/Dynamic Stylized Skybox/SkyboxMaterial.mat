@@ -15,9 +15,6 @@ Material:
   m_InvalidKeywords:
   - _CLOUDBACKON_ON
   - _CLOUDON_ON
-  - _MOONON1_ON
-  - _MOONON2_ON
-  - _MOONON_ON
   - _SUNCOLORCUSTOMIZE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0

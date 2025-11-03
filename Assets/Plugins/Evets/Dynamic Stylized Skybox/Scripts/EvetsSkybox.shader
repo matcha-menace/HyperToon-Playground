@@ -270,7 +270,7 @@ Shader "Evets/Skybox"
 
                 // The moon
                 float moonIntersect = SphereIntersect(viewDir, _MoonDir, _MoonRadius);
-                float moonMask = moonIntersect > -1 ? 1 : 0;
+                float moonMask = moonIntersect * 2 > -1 ? 1 : 0;
                 float3 moonNormal = normalize(_MoonDir - viewDir * moonIntersect);
                 float moonNdotL = saturate(dot(moonNormal, -_SunDir));
                 float3 moonTexture = GetMoonTexture(moonNormal, 0);
@@ -281,7 +281,7 @@ Shader "Evets/Skybox"
 
                 // The moon1
                 float moonIntersect1 = SphereIntersect(viewDir, _MoonDir1, _MoonRadius1);
-                float moonMask1 = moonIntersect1 > -1 ? 1 - moonMask : 0;
+                float moonMask1 = moonIntersect1 * 2 > -1 ? 1 - moonMask : 0;
                 float3 moonNormal1 = normalize(_MoonDir1 - viewDir * moonIntersect1);
                 float moonNdotL1 = saturate(dot(moonNormal1, -_SunDir));
                 float3 moonTexture1 = GetMoonTexture(moonNormal1, 1);
@@ -292,7 +292,7 @@ Shader "Evets/Skybox"
 
                 // The moon2
                 float moonIntersect2 = SphereIntersect(viewDir, _MoonDir2, _MoonRadius2);
-                float moonMask2 = moonIntersect2 > -1 ? 1 - moonMask - moonMask1 : 0;
+                float moonMask2 = moonIntersect2 * 2 > -1 ? 1 - moonMask - moonMask1 : 0;
                 float3 moonNormal2 = normalize(_MoonDir2 - viewDir * moonIntersect2);
                 float moonNdotL2 = saturate(dot(moonNormal2, -_SunDir));
                 float3 moonTexture2 = GetMoonTexture(moonNormal2, 2);
