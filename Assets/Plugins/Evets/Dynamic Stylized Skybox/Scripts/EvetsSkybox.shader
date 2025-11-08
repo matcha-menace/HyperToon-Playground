@@ -155,8 +155,9 @@ Shader "Evets/Skybox"
 
             float GetSunMask(float sunViewDot, float sunRadius)
             {
-                float stepRadius = 1 - sunRadius * sunRadius;
-                return step(stepRadius, sunViewDot);
+                // float stepRadius = 1 - sunRadius * sunRadius;
+                // return step(stepRadius, sunViewDot);
+                return pow(saturate((sunViewDot - (1.0 - sunRadius)) / sunRadius), 99.0 * (1.0 - sunRadius)); // TODO: optimize & turn into properties
             }
 
             float SphereIntersect(float3 rayDir, float3 spherePos, float radius)
@@ -369,7 +370,7 @@ Shader "Evets/Skybox"
                 
 
                 float3 col = skyColor + sunColor + cloudBackColor + cloudColor + starColor + moonColor + moonColor1 + moonColor2;
-                // col = allMoonMask;
+                // col = allMoonMask; // debug line
                 
                 return float4(col, 1);
             }
