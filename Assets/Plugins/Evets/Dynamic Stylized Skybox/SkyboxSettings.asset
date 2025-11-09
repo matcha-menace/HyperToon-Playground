@@ -106,16 +106,16 @@ MonoBehaviour:
     serializedVersion: 2
     key0: {r: 0, g: 0, b: 0, a: 1}
     key1: {r: 0, g: 0, b: 0, a: 1}
-    key2: {r: 0.99215686, g: 0.36891446, b: 0.0745098, a: 0}
-    key3: {r: 0.9811321, g: 0.64328945, b: 0.64328945, a: 0}
+    key2: {r: 0.99215686, g: 0.36862746, b: 0.07450981, a: 0}
+    key3: {r: 0.98039216, g: 0.6431373, b: 0.6431373, a: 0}
     key4: {r: 1, g: 1, b: 1, a: 0}
     key5: {r: 0, g: 0.38778615, b: 1, a: 0}
     key6: {r: 1, g: 0.11372548, b: 0.9058901, a: 0}
     key7: {r: 1, g: 0, b: 0, a: 0}
     ctime0: 0
     ctime1: 11403
-    ctime2: 29298
-    ctime3: 42791
+    ctime2: 29294
+    ctime3: 42794
     ctime4: 65535
     ctime5: 45875
     ctime6: 58789
@@ -164,6 +164,9 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   sunRadius: 0.12
   sunIntensity: 4
+  sunHaloStrength: 24
+  sunEdgeFalloff: 1
+  sunCoreSharpness: 0.5
   customizeSunColors: 1
   sunTexture: 0
   sunCubeMap: {fileID: 8900000, guid: 017cba7961620c047b2611812fb159cf, type: 3}

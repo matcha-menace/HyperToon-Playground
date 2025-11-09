@@ -86,6 +86,9 @@ namespace Evets
         
         private SerializedProperty sunRadius;
         private SerializedProperty sunIntensity;
+        private SerializedProperty sunHaloStrength;
+        private SerializedProperty sunEdgeFalloff;
+        private SerializedProperty sunCoreSharpness;
         private SerializedProperty synthwaveSun;
         private SerializedProperty synthSunBottom;
         private SerializedProperty synthSunLines;
@@ -137,6 +140,9 @@ namespace Evets
         {
             sunRadius = serializedObject.FindProperty("sunRadius");
             sunIntensity = serializedObject.FindProperty("sunIntensity");
+            sunHaloStrength = serializedObject.FindProperty("sunHaloStrength");
+            sunEdgeFalloff = serializedObject.FindProperty("sunEdgeFalloff");
+            sunCoreSharpness = serializedObject.FindProperty("sunCoreSharpness");
             synthwaveSun = serializedObject.FindProperty("synthwaveSun");
             synthSunBottom = serializedObject.FindProperty("synthSunBottom");
             synthSunLines = serializedObject.FindProperty("synthSunLines");
@@ -244,6 +250,9 @@ namespace Evets
                 EditorGUILayout.Space();
                 EditorGUILayout.PropertyField(sunRadius);
                 EditorGUILayout.PropertyField(sunIntensity);
+                EditorGUILayout.PropertyField(sunHaloStrength);
+                EditorGUILayout.PropertyField(sunEdgeFalloff);
+                EditorGUILayout.PropertyField(sunCoreSharpness);
                 EditorGUILayout.PropertyField(sunColorCustomizeSwitch);
                 if (!sunColorCustomizeSwitch.boolValue)
                 {
