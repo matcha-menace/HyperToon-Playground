@@ -166,7 +166,7 @@ MonoBehaviour:
   sunIntensity: 4
   sunHaloStrength: 24
   sunEdgeFalloff: 1
-  sunCoreSharpness: 0.5
+  sunCoreSharpness: 0
   customizeSunColors: 1
   sunTexture: 0
   sunCubeMap: {fileID: 8900000, guid: 017cba7961620c047b2611812fb159cf, type: 3}

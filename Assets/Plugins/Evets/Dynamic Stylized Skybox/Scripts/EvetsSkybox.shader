@@ -2,14 +2,19 @@ Shader "Evets/Skybox"
 {
     Properties
     {
+        [Header(Global)]
         [NoScaleOffset] _SunZenithGrad ("Sun-Zenith gradient", 2D) = "white" {}
         [NoScaleOffset] _ViewZenithGrad ("View-Zenith gradient", 2D) = "white" {}
         [NoScaleOffset] _SunViewGrad ("Sun-View gradient", 2D) = "white" {}
+        
+        _SkyExposure ("Sky Exposure", Range(0, 4)) = 1
+        
         // Sun
+        [Header(Sun)]
         _SunRadius ("Sun radius", Range(0, 1)) = 0.05
         _SunIntensity ("Sun intensity", Range(1, 3)) = 1
         _SunEdgeFalloff("Sun Edge Falloff", Range(1, 200)) = 100
-        _SunCoreSharpness("Sun Core Sharpness", Range(0.5, 10)) = 2
+        _SunCoreSharpness("Sun Core Sharpness", Range(0, 0.1)) = 0
         _SunHaloStrength("Sun Halo Strength", Range(2, 100)) = 24
         [MaterialToggle] _SunColorCustomize ("Sun color customize", Float) = 0
         [NoScaleOffset] _SunColorGrad ("Sun color gradient", 2D) = "white" {}
@@ -19,28 +24,36 @@ Shader "Evets/Skybox"
         [MaterialToggle] _SynthSun ("Synth sun", Float) = 0
         _SynthSunLines ("Synth sun lines", Range(0, 1)) = 0.5
         _SynthSunBottom ("Synth sun bottom", Range(0, 1)) = 0.5
+        
         // Moon
+        [Header(Moon 0)]
         [NoScaleOffset] _MoonCubeMap ("Moon cube map", Cube) = "black" {}
         [MaterialToggle] _MoonOn("Moon On", Float) = 1
         _MoonRadius ("Moon radius", Range(0, 1)) = 0.05
         _MoonEdgeStrength ("Moon edge strength", Range(0.01, 1)) = 0.5
         _MoonExposure ("Moon exposure", Range(-16, 0)) = 0
         _MoonDarkside ("Moon darkside", Range(0, 1)) = 0.5
+        
         // Moon 1
+        [Header(Moon 1)]
         [NoScaleOffset] _MoonCubeMap1 ("Moon cube map", Cube) = "black" {}
         [MaterialToggle] _MoonOn1("Moon On", Float) = 1
         _MoonRadius1 ("Moon radius", Range(0, 1)) = 0.05
         _MoonEdgeStrength1 ("Moon edge strength", Range(0.01, 1)) = 0.5
         _MoonExposure1 ("Moon exposure", Range(-16, 0)) = 0
         _MoonDarkside1 ("Moon darkside", Range(0, 1)) = 0.5
+        
         // Moon 2
+        [Header(Moon 2)]
         [NoScaleOffset] _MoonCubeMap2 ("Moon cube map", Cube) = "black" {}
         [MaterialToggle] _MoonOn2("Moon On", Float) = 1
         _MoonRadius2 ("Moon radius", Range(0, 1)) = 0.05
         _MoonEdgeStrength2 ("Moon edge strength", Range(0.01, 1)) = 0.5
         _MoonExposure2 ("Moon exposure", Range(-16, 0)) = 0
         _MoonDarkside2 ("Moon darkside", Range(0, 1)) = 0.5
+        
         // Clouds
+        [Header(Clouds)]
         [NoScaleOffset] _CloudGrad ("Cloud color gradient", 2D) = "white" {}
         [NoScaleOffset] _CloudCubeMap ("Cloud cube map", Cube) = "black" {}
         [MaterialToggle] _CloudOn("Cloud On", Float) = 1
@@ -48,7 +61,9 @@ Shader "Evets/Skybox"
         _CloudSpeed ("Cloud speed", Float) = 0.001
         [NoScaleOffset] _CloudBackCubeMap ("Cloud cube map", Cube) = "black" {}
         _Cloudiness ("Cloudiness", Range(0, 1)) = 0.5
+        
         // Stars
+        [Header(Stars)]
         [NoScaleOffset] _StarCubeMap ("Star cube map", Cube) = "black" {}
         _StarExposure ("Star exposure", Range(-16, 16)) = 0
         _StarPower ("Star power", Range(1, 5)) = 1
@@ -70,31 +85,19 @@ Shader "Evets/Skybox"
             
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
-            TEXTURE2D(_SunZenithGrad);
-            SAMPLER(sampler_SunZenithGrad);
-            TEXTURE2D(_ViewZenithGrad);
-            SAMPLER(sampler_ViewZenithGrad);
-            TEXTURE2D(_SunViewGrad);
-            SAMPLER(sampler_SunViewGrad);
-            TEXTURE2D(_CloudGrad);
-            SAMPLER(sampler_CloudGrad);
-            TEXTURE2D(_SunColorGrad);
-            SAMPLER(sampler_SunColorGrad);
+            TEXTURE2D(_SunZenithGrad);SAMPLER(sampler_SunZenithGrad);
+            TEXTURE2D(_ViewZenithGrad);SAMPLER(sampler_ViewZenithGrad);
+            TEXTURE2D(_SunViewGrad);SAMPLER(sampler_SunViewGrad);
+            TEXTURE2D(_CloudGrad);SAMPLER(sampler_CloudGrad);
+            TEXTURE2D(_SunColorGrad);SAMPLER(sampler_SunColorGrad);
 
-            TEXTURECUBE(_SunCubeMap);
-            SAMPLER(sampler_SunCubeMap);
-            TEXTURECUBE(_MoonCubeMap);
-            SAMPLER(sampler_MoonCubeMap);
-            TEXTURECUBE(_MoonCubeMap1);
-            SAMPLER(sampler_MoonCubeMap1);
-            TEXTURECUBE(_MoonCubeMap2);
-            SAMPLER(sampler_MoonCubeMap2);
-            TEXTURECUBE(_StarCubeMap);
-            SAMPLER(sampler_StarCubeMap);
-            TEXTURECUBE(_CloudCubeMap);
-            SAMPLER(sampler_CloudCubeMap);
-            TEXTURECUBE(_CloudBackCubeMap);
-            SAMPLER(sampler_CloudBackCubeMap);
+            TEXTURECUBE(_SunCubeMap);SAMPLER(sampler_SunCubeMap);
+            TEXTURECUBE(_MoonCubeMap);SAMPLER(sampler_MoonCubeMap);
+            TEXTURECUBE(_MoonCubeMap1);SAMPLER(sampler_MoonCubeMap1);
+            TEXTURECUBE(_MoonCubeMap2);SAMPLER(sampler_MoonCubeMap2);
+            TEXTURECUBE(_StarCubeMap);SAMPLER(sampler_StarCubeMap);
+            TEXTURECUBE(_CloudCubeMap);SAMPLER(sampler_CloudCubeMap);
+            TEXTURECUBE(_CloudBackCubeMap);SAMPLER(sampler_CloudBackCubeMap);
 
             struct Attributes
             {
@@ -133,25 +136,19 @@ Shader "Evets/Skybox"
             float3 _MoonDir;
             float _MoonOn;
             float _MoonRadius;
-            float _MoonEdgeStrength;
-            float _MoonExposure;
-            float _MoonDarkside;
+            float _MoonEdgeStrength, _MoonExposure, _MoonDarkside;
             float4x4 _MoonSpaceMatrix;
 
             float3 _MoonDir1;
             float _MoonOn1;
             float _MoonRadius1;
-            float _MoonEdgeStrength1;
-            float _MoonExposure1;
-            float _MoonDarkside1;
+            float _MoonEdgeStrength1, _MoonExposure1, _MoonDarkside1;
             float4x4 _MoonSpaceMatrix1;
 
             float3 _MoonDir2;
             float _MoonOn2;
             float _MoonRadius2;
-            float _MoonEdgeStrength2;
-            float _MoonExposure2;
-            float _MoonDarkside2;
+            float _MoonEdgeStrength2, _MoonExposure2, _MoonDarkside2;
             float4x4 _MoonSpaceMatrix2;
 
             float _StarExposure, _StarPower;
@@ -166,8 +163,10 @@ Shader "Evets/Skybox"
                 // return step(stepRadius, sunViewDot);
 
                 float edge = saturate((sunViewDot - (1.0 - sunRadius)) / sunRadius); // same as svMask
-                float edgeMask = pow(edge, _SunEdgeFalloff);
-                float coreMask = pow(edgeMask, _SunCoreSharpness);
+                float edgeMask = pow(edge, _SunEdgeFalloff * 5);
+                float sunCoreDisc = step(1 - sunRadius * sunRadius * 0.1, sunViewDot);
+                float coreOpacity = sunCoreDisc * _SunCoreSharpness;
+                float coreMask = coreOpacity + edgeMask;
 
                 return coreMask;
             }
@@ -256,13 +255,11 @@ Shader "Evets/Skybox"
                 MoonData data;
                 data.color = 0;
                 data.mask = 0;
-                            
-                if (moonOn < 0.001)
-                    return data;
+                
+                if (moonOn < 0.001) return data; // skip over if moon is off for optimization
 
                 float moonIntersect = SphereIntersect(viewDir, moonDir, moonRadius);
-                if (moonIntersect * 2.0 <= -1.0)
-                    return data;
+                if (moonIntersect * 2.0 <= -1.0) return data;
 
                 float3 moonNormal = normalize(moonDir - viewDir * moonIntersect);
                 float moonNdotL = saturate(dot(moonNormal, -_SunDir));
@@ -273,12 +270,13 @@ Shader "Evets/Skybox"
                 color += saturate(moonDarkside * moonTexture);
 
                 data.color = color * moonOn;
-                data.mask  = moonOn; // or 1 if you want to count only visible moons
+                data.mask = moonOn;
                 return data;
             }
 
-            float3 ComputeLunarEclipseColor(float sunViewDot, float sunMoonDot, float sunRadius, float maskScale)
+            float3 ComputeLunarEclipseColor(float sunViewDot, float sunMoonDot, float sunRadius, float maskScale, float moonOn)
             {
+                if (moonOn < 0.001) return 0; // skip over if moon is off for optimization
                 float radiusSq = sunRadius * sunRadius;
                 float lunarEclipseMask = 1 - step(1 - radiusSq * maskScale, -sunViewDot);
                 float lunarEclipse01 = smoothstep(1 - radiusSq * 0.05, 1.0, -sunMoonDot);
@@ -290,8 +288,9 @@ Shader "Evets/Skybox"
                 return saturate(targetMask - otherMoonMasks);
             }
 
-            float ComputeSolarEclipse(float sunMoonDot, float sunRadius, float moonRadius)
+            float ComputeSolarEclipse(float sunMoonDot, float sunRadius, float moonRadius, float moonOn)
             {
+                if (moonOn < 0.001) return 0; // skip over if moon is off for optimization
                 return smoothstep(1 - sunRadius * (moonRadius + 0.4), 1.0, sunMoonDot);
             }
 
@@ -377,18 +376,18 @@ Shader "Evets/Skybox"
                 float sunMoonDot = dot(_SunDir, _MoonDir);
                 float sunMoonDot1 = dot(_SunDir, _MoonDir1);
                 float sunMoonDot2 = dot(_SunDir, _MoonDir2);
-                float solarEclipse01 = ComputeSolarEclipse(sunMoonDot,  _SunRadius, _MoonRadius);
-                float solarEclipse02 = ComputeSolarEclipse(sunMoonDot1, _SunRadius, _MoonRadius1);
-                float solarEclipse03 = ComputeSolarEclipse(sunMoonDot2, _SunRadius, _MoonRadius2);
-                ApplySolarEclipse(skyColor, sunColor, moon0.mask, solarEclipse01);
-                ApplySolarEclipse(skyColor, sunColor, moon1.mask, solarEclipse02);
-                ApplySolarEclipse(skyColor, sunColor, moon2.mask, solarEclipse03);
+                ApplySolarEclipse(skyColor, sunColor, moon0.mask,
+                    ComputeSolarEclipse(sunMoonDot,  _SunRadius, _MoonRadius, _MoonOn));
+                ApplySolarEclipse(skyColor, sunColor, moon1.mask,
+                    ComputeSolarEclipse(sunMoonDot1, _SunRadius, _MoonRadius1, _MoonOn1));
+                ApplySolarEclipse(skyColor, sunColor, moon2.mask,
+                    ComputeSolarEclipse(sunMoonDot2, _SunRadius, _MoonRadius2, _MoonOn2));
                 sunColor *= _SunIntensity;
 
                 // lunar eclipse
-                moon0.color *= ComputeLunarEclipseColor(sunViewDot, sunMoonDot,  _SunRadius, 1.0);
-                moon1.color *= ComputeLunarEclipseColor(sunViewDot, sunMoonDot1, _SunRadius, 0.5);
-                moon2.color *= ComputeLunarEclipseColor(sunViewDot, sunMoonDot2, _SunRadius, 0.25);
+                moon0.color *= ComputeLunarEclipseColor(sunViewDot, sunMoonDot,  _SunRadius, 1.0, _MoonOn);
+                moon1.color *= ComputeLunarEclipseColor(sunViewDot, sunMoonDot1, _SunRadius, 0.5, _MoonOn1);
+                moon2.color *= ComputeLunarEclipseColor(sunViewDot, sunMoonDot2, _SunRadius, 0.25, _MoonOn2);
 
                 float3 moonColor = moon0.color * ComputeIsolatedMoonMask(moon0.mask, moon1.mask + moon2.mask)
                 + moon1.color * ComputeIsolatedMoonMask(moon1.mask, moon2.mask)
@@ -411,7 +410,7 @@ Shader "Evets/Skybox"
                 
 
                 float3 col = skyColor + sunColor + cloudBackColor + cloudColor + starColor + moonColor;
-                // col = allMoonMask; // debug line
+                // col = sunMask; // debug line
                 
                 return float4(col, 1);
             }

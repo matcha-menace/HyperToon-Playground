@@ -21,7 +21,7 @@ namespace Evets
         [Range(1f, 4f), SerializeField] private float sunIntensity = 4;
         [SerializeField, Range(2, 100)] private float sunHaloStrength = 24;
         [SerializeField, Range(1, 200)] private float sunEdgeFalloff = 1;
-        [SerializeField, Range(0.5f, 10f)] private float sunCoreSharpness = 0.5f;
+        [SerializeField, Range(0f, 0.1f)] private float sunCoreSharpness = 0f;
         [SerializeField] private bool customizeSunColors;
         [SerializeField] private bool sunTexture = false;
         [SerializeField] private Cubemap sunCubeMap;

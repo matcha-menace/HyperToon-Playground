@@ -7,19 +7,15 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SkyboxMaterial
-  m_Shader: {fileID: 4800000, guid: 272820f54bbd7cf4390571d1ebd54069, type: 3}
+  m_Name: Evets_Skybox_edited
+  m_Shader: {fileID: 4800000, guid: 317f989ae20e87f43bdaccd6cd30c54a, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - MOON_ON
+  m_ValidKeywords: []
   m_InvalidKeywords:
-  - _CLOUDBACKON_ON
   - _CLOUDON_ON
   - _MOONON1_ON
   - _MOONON2_ON
-  - _MOONON_ON
-  - _SUNCOLORCUSTOMIZE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -39,23 +35,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CloudGrad:
-        m_Texture: {fileID: 2800000, guid: 4fa84b1e0aba95d4494e6a73d04229d9, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _CloudySunMask:
-        m_Texture: {fileID: 2800000, guid: 25d145c0f0480f44fa5fcfde9f924210, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MoonCubeMap:
-        m_Texture: {fileID: 8900000, guid: 2c994b41ee22a30418ad058f51c49aeb, type: 3}
+        m_Texture: {fileID: 8900000, guid: 017cba7961620c047b2611812fb159cf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MoonCubeMap1:
-        m_Texture: {fileID: 8900000, guid: 8b6763a3e47f58849bc7a9e22444d6d5, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MoonCubeMap2:
-        m_Texture: {fileID: 8900000, guid: 004cc75ff9e269041824094d4450de02, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _StarCubeMap:
@@ -64,10 +56,6 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _SunColorGrad:
         m_Texture: {fileID: 2800000, guid: 79eff36e6094caa4eb5c7f9b2d1e76ca, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SunCubeMap:
-        m_Texture: {fileID: 8900000, guid: 017cba7961620c047b2611812fb159cf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SunViewGrad:
@@ -85,43 +73,33 @@ Material:
     m_Ints: []
     m_Floats:
     - _CloudAlpha: 0.6
-    - _CloudBackOn: 0
-    - _CloudBackSpeed: 0.0002
     - _CloudOn: 1
-    - _CloudOpacity: 1
     - _CloudSpeed: 0.001
     - _Cloudiness: 0
-    - _MoonDarkside: 0
-    - _MoonDarkside1: 0
-    - _MoonDarkside2: 0
-    - _MoonEdgeStrength: 0.4
-    - _MoonEdgeStrength1: 0.4
-    - _MoonEdgeStrength2: 0.4
+    - _MoonDarkside: 0.5
+    - _MoonDarkside1: 0.5
+    - _MoonDarkside2: 0.5
+    - _MoonEdgeStrength: 0.5
+    - _MoonEdgeStrength1: 0.5
+    - _MoonEdgeStrength2: 0.5
     - _MoonExposure: 0
     - _MoonExposure1: 0
     - _MoonExposure2: 0
-    - _MoonOn: 1
+    - _MoonOn: 0
     - _MoonOn1: 1
     - _MoonOn2: 1
-    - _MoonRadius: 0.2
-    - _MoonRadius1: 0.1
-    - _MoonRadius2: 0.3
-    - _SkyExposure: 1
+    - _MoonRadius: 0.396
+    - _MoonRadius1: 0.05
+    - _MoonRadius2: 0.05
+    - _SkyExposure: 0.37
     - _StarExposure: 0
-    - _StarLatitude: -8
-    - _StarPower: 1.8
-    - _StarSpeed: 0.0005
-    - _SunColorCustomize: 1
-    - _SunCoreSharpness: 0
-    - _SunEdgeFalloff: 1
-    - _SunHaloStrength: 24
-    - _SunIntensity: 4
-    - _SunRadius: 0.12
-    - _SunTexture: 0
-    - _SunTextureOn: 0
-    - _SunTextureStrength: 0.8
-    - _SynthSun: 0
-    - _SynthSunBottom: 0.5
-    - _SynthSunLines: 64
+    - _StarLatitude: 0
+    - _StarPower: 1
+    - _StarSpeed: 0.001
+    - _SunColorCustomize: 0
+    - _SunHaze: 0.264
+    - _SunIntensity: 6.4
+    - _SunRadius: 0.0487
+    - _SunSize: 0.1163
     m_Colors: []
   m_BuildTextureStacks: []
