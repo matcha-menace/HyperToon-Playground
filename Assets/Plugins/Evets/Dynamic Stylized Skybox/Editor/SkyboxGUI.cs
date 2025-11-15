@@ -83,6 +83,7 @@ namespace Evets
         private SerializedProperty sunHaloGradient;
         private SerializedProperty cloudColorGradient;
         private SerializedProperty sunColorGradient;
+        private SerializedProperty skyExposure;
         
         private SerializedProperty sunRadius;
         private SerializedProperty sunIntensity;
@@ -150,6 +151,7 @@ namespace Evets
             sunTexture = serializedObject.FindProperty("sunCubeMap");
             sunTextureStrength = serializedObject.FindProperty("sunTextureStrength");
             sunColorCustomizeSwitch = serializedObject.FindProperty("customizeSunColors");
+            skyExposure = serializedObject.FindProperty("skyExposure");
 
             // moons
             moonCount = serializedObject.FindProperty("moonCount");
@@ -240,6 +242,10 @@ namespace Evets
             if (GUILayout.Button("Update All Gradients"))
                 s.UpdateGradients();
 
+            // Sky Exposure
+            EditorGUILayout.Space();
+            EditorGUILayout.PropertyField(skyExposure);
+            
             // --- SUN ---
             EditorGUILayout.Space();
             sunFoldout = EditorGUILayout.Foldout(sunFoldout, "Sun", true, new GUIStyle(EditorStyles.foldout) {fontStyle = FontStyle.Bold});

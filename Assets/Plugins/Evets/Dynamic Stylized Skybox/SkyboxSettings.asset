@@ -162,6 +162,7 @@ MonoBehaviour:
     m_ColorSpace: 0
     m_NumColorKeys: 7
     m_NumAlphaKeys: 2
+  skyExposure: 1
   sunRadius: 0.12
   sunIntensity: 4
   sunHaloStrength: 24

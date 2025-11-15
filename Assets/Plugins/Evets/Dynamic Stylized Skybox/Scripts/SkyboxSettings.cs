@@ -15,13 +15,14 @@ namespace Evets
         [SerializeField] private Gradient sunHaloGradient;
         [SerializeField] private Gradient sunColorGradient;
         [SerializeField] private Gradient cloudColorGradient;
+        [SerializeField, Range(0f, 4f)] private float skyExposure = 1f;
         
         // sun
         [Range(0f, 1f), SerializeField] private float sunRadius = 0.12f;
-        [Range(1f, 4f), SerializeField] private float sunIntensity = 4;
+        [Range(1f, 20f), SerializeField] private float sunIntensity = 4;
         [SerializeField, Range(2, 100)] private float sunHaloStrength = 24;
         [SerializeField, Range(1, 200)] private float sunEdgeFalloff = 1;
-        [SerializeField, Range(0f, 0.1f)] private float sunCoreSharpness = 0f;
+        [SerializeField, Range(0f, 1f)] private float sunCoreSharpness = 0f;
         [SerializeField] private bool customizeSunColors;
         [SerializeField] private bool sunTexture = false;
         [SerializeField] private Cubemap sunCubeMap;
@@ -78,6 +79,7 @@ namespace Evets
 
         private void SetSkyboxValues()
         {
+            RenderSettings.skybox.SetFloat("_SkyExposure", skyExposure);
             RenderSettings.skybox.SetFloat("_SunRadius", sunRadius);
             RenderSettings.skybox.SetFloat("_SunIntensity", sunIntensity);
             RenderSettings.skybox.SetFloat("_SunHaloStrength", sunHaloStrength);

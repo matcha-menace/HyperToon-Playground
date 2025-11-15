@@ -12,9 +12,9 @@ Shader "Evets/Skybox"
         // Sun
         [Header(Sun)]
         _SunRadius ("Sun radius", Range(0, 1)) = 0.05
-        _SunIntensity ("Sun intensity", Range(1, 3)) = 1
+        _SunIntensity ("Sun intensity", Range(1, 20)) = 1
         _SunEdgeFalloff("Sun Edge Falloff", Range(1, 200)) = 100
-        _SunCoreSharpness("Sun Core Sharpness", Range(0, 0.1)) = 0
+        _SunCoreSharpness("Sun Core Sharpness", Range(0, 1)) = 0
         _SunHaloStrength("Sun Halo Strength", Range(2, 100)) = 24
         [MaterialToggle] _SunColorCustomize ("Sun color customize", Float) = 0
         [NoScaleOffset] _SunColorGrad ("Sun color gradient", 2D) = "white" {}
@@ -155,6 +155,8 @@ Shader "Evets/Skybox"
             float _StarLatitude, _StarSpeed;
 
             float _CloudSpeed, _CloudOn, _CloudAlpha, _Cloudiness;
+
+            float _SkyExposure;
 
             float GetSunMask(float sunViewDot, float sunRadius)
             {
@@ -409,7 +411,8 @@ Shader "Evets/Skybox"
                 cloudBackColor *= pow(saturate(sunViewDot), 24) * frontCloudBlocking + cloudBackColor;
                 
 
-                float3 col = skyColor + sunColor + cloudBackColor + cloudColor + starColor + moonColor;
+                float3 col = skyColor * _SkyExposure + sunColor + cloudBackColor + cloudColor + starColor + moonColor;
+                // col *= _SkyExposure;
                 // col = sunMask; // debug line
                 
                 return float4(col, 1);
