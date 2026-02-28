@@ -82,6 +82,12 @@ Shader "Evets/Skybox"
             #pragma fragment Fragment
 
             #pragma shader_feature_local _ MOON_ON
+            #pragma shader_feature_local _SUN_TEXTURE
+            #pragma shader_feature_local _CLOUDS
+            #pragma shader_feature_local _STARS
+            #pragma shader_feature_local _MOON0
+            #pragma shader_feature_local _MOON1
+            #pragma shader_feature_local _MOON2
             
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
@@ -195,10 +201,10 @@ Shader "Evets/Skybox"
                     m = _MoonSpaceMatrix2;
                 
                 float3 uvw = mul(m, float4(normal,0)).xyz;
-                float3x3 correctionMatrix = float3x3(0, -0.2588190451, -0.9659258263,
-                    0.08715574275, 0.9622501869, -0.2578341605,
-                    0.9961946981, -0.08418598283, 0.02255756611);
-                uvw = mul(correctionMatrix, uvw);
+                const float3x3 correction_matrix = float3x3(0, -0.2588190451, -0.9659258263,
+                                                           0.08715574275, 0.9622501869, -0.2578341605,
+                                                           0.9961946981, -0.08418598283, 0.02255756611);
+                uvw = mul(correction_matrix, uvw);
                 
                 if (moonIndex == 0) return SAMPLE_TEXTURECUBE(_MoonCubeMap, sampler_MoonCubeMap, uvw).rgb;
                 if (moonIndex == 1) return SAMPLE_TEXTURECUBE(_MoonCubeMap1, sampler_MoonCubeMap1, uvw).rgb;
@@ -309,68 +315,95 @@ Shader "Evets/Skybox"
 
                 // angles
                 float sunViewDot = dot(_SunDir, viewDir);
-                float sunZenithDot = _SunDir.y;
-                float viewZenithDot = viewDir.y;
+                const float sunZenithDot = _SunDir.y;
+                const float viewZenithDot = viewDir.y;
 
-                float sunViewDot1 = (sunViewDot + 1) * 0.5;
+                const float sunViewDot1 = (sunViewDot + 1) * 0.5;
                 float sunZenithDot1 = (sunZenithDot + 1) * 0.5;
 
                 // sky colors
-                float3 sunZenithColor = SAMPLE_TEXTURE2D(_SunZenithGrad, sampler_SunZenithGrad, float2(sunZenithDot1, 0.5)).rgb;
-                float3 viewZenithColor = SAMPLE_TEXTURE2D(_ViewZenithGrad, sampler_ViewZenithGrad, float2(sunZenithDot1, 0.5)).rgb;
-                float vzMask = pow(saturate(1.0 - viewZenithDot), 4);
-                float3 sunViewColor = SAMPLE_TEXTURE2D(_SunViewGrad, sampler_SunViewGrad, float2(sunZenithDot1, 0.5)).rgb;
-                float svMask = pow(saturate(sunViewDot), _SunHaloStrength);
+                const float3 sunZenithColor = SAMPLE_TEXTURE2D(_SunZenithGrad, sampler_SunZenithGrad, float2(sunZenithDot1, 0.5)).rgb;
+                const float3 viewZenithColor = SAMPLE_TEXTURE2D(_ViewZenithGrad, sampler_ViewZenithGrad, float2(sunZenithDot1, 0.5)).rgb;
+                const float vzMask = pow(saturate(1.0 - viewZenithDot), 4);
+                const float3 sunViewColor = SAMPLE_TEXTURE2D(_SunViewGrad, sampler_SunViewGrad, float2(sunZenithDot1, 0.5)).rgb;
+                const float svMask = pow(saturate(sunViewDot), _SunHaloStrength);
                 
                 // The sun
                 float sunMask = GetSunMask(sunViewDot, _SunRadius);
-                float bottom = step(1 + lerp(-.3, .3, _SynthSunBottom) - sunZenithDot, 1 - v.uv.g) * smoothstep(.7, .75, 1 - sunZenithDot);
-                float smoothBottom = smoothstep(1 - sunZenithDot, 2 - sunZenithDot, 1 - v.uv.g);
-                float lines = lerp(_SynthSunLines, _SynthSunLines * 5, smoothBottom);
+                const float bottom = step(1 + lerp(-.3, .3, _SynthSunBottom) - sunZenithDot, 1 - v.uv.g) * smoothstep(.7, .75, 1 - sunZenithDot);
+                const float smoothBottom = smoothstep(1 - sunZenithDot, 2 - sunZenithDot, 1 - v.uv.g);
+                const float lines = lerp(_SynthSunLines, _SynthSunLines * 5, smoothBottom);
                 sunMask = _SynthSun < 1 ? sunMask : 
                     saturate(
                     step(.5, tan(v.uv.g * lines + 1))
                     ) * bottom * sunMask + (1 - bottom) * sunMask;
-                float sunIntersect = SphereIntersect(viewDir, _SunDir, _SunRadius);
+                const float sunIntersect = SphereIntersect(viewDir, _SunDir, _SunRadius);
                 sunMask = sunIntersect > -1 ? sunMask : 0;
+                #ifdef _SUN_TEXTURE
                 float3 sunNormal = normalize(_SunDir - viewDir * sunIntersect);
-                float3 sunTexture = _SunTextureOn == 0 ? 1 : GetSunTexture(sunNormal) * _SunTextureStrength + 1 - _SunTextureStrength;
-                float3 sunOverlayColor = _SunColorCustomize == 0 ? _MainLightColor.rgb : SAMPLE_TEXTURE2D(_SunColorGrad, sampler_SunColorGrad, float2(sunZenithDot1, 0.5)).rgb;
+                float3 sunTexture = GetSunTexture(sunNormal) * _SunTextureStrength + 1 - _SunTextureStrength;
+                #else
+                float3 sunTexture = 1;
+                #endif
+                const float3 sunOverlayColor = _SunColorCustomize == 0 ? _MainLightColor.rgb : SAMPLE_TEXTURE2D(_SunColorGrad, sampler_SunColorGrad, float2(sunZenithDot1, 0.5)).rgb;
                 float3 sunColor = sunOverlayColor * sunMask * sunTexture;
 
                 // The moon
                 #ifdef MOON_ON
+                #ifdef _MOON0
                 MoonData moon0 = ComputeMoon(viewDir, _MoonDir,  _MoonRadius,  _MoonExposure,  _MoonEdgeStrength,  _MoonDarkside,  0, _MoonOn);
+                #else
+                MoonData moon0 = (MoonData)0;
+                #endif
+                #ifdef _MOON1
                 MoonData moon1 = ComputeMoon(viewDir, _MoonDir1, _MoonRadius1, _MoonExposure1, _MoonEdgeStrength1, _MoonDarkside1, 1, _MoonOn1);
+                #else
+                MoonData moon1 = (MoonData)0;
+                #endif
+                #ifdef _MOON2
                 MoonData moon2 = ComputeMoon(viewDir, _MoonDir2, _MoonRadius2, _MoonExposure2, _MoonEdgeStrength2, _MoonDarkside2, 2, _MoonOn2);
+                #else
+                MoonData moon2 = (MoonData)0;
+                #endif
                 
                 float allMoonMask = saturate(moon0.mask + moon1.mask + moon2.mask);
                 #else
                 float allMoonMask = 0;
                 #endif
-                
-                
-                // clouds
+
+                #ifdef _CLOUDS
                 float3 cloudUVW = GetStarUVW(viewDir, 90, _Time.y * _CloudSpeed % 1);
+                float3 cloudBackUVW = GetStarUVW(viewDir, 90, _Time.y * (_CloudSpeed / 4) % 1);
+                // clouds
                 float3 cloudColor = SAMPLE_TEXTURECUBE_BIAS(_CloudCubeMap, sampler_CloudCubeMap, cloudUVW, -1).rgb;
                 cloudColor *= _CloudOn * _CloudAlpha;
                 // clouds back
-                float3 cloudBackUVW = GetStarUVW(viewDir, 90, _Time.y * (_CloudSpeed / 4) % 1);
                 float3 cloudBackColor = SAMPLE_TEXTURECUBE_BIAS(_CloudBackCubeMap, sampler_CloudBackCubeMap, cloudBackUVW, -1).rgb;
                 cloudBackColor *= _Cloudiness * _CloudAlpha * _CloudOn;
 
                 // cloud blocking
                 float3 cloudBlocking = 1 - smoothstep(0.01, .1, cloudColor + cloudBackColor);
+                #else
+                float3 cloudColor = 0;
+                float3 cloudBackColor = 0;
+                float3 cloudBlocking = 1;
+                #endif
+                
                 // calculate sky color (with cloud)
                 float3 skyColor = sunZenithColor + vzMask * viewZenithColor + svMask * cloudBlocking * (sunViewColor * lerp(1, 1 - allMoonMask, 1)); // moon masking sun halo
                 skyColor *= lerp(1, 0.8, _Cloudiness * _CloudOn); // darken color for when cloudy
 
                 // stars
+                #ifdef _STARS
                 float3 starUVW = GetStarUVW(viewDir, _StarLatitude, _Time.y * _StarSpeed % 1);
                 float3 starColor = SAMPLE_TEXTURECUBE_BIAS(_StarCubeMap, sampler_StarCubeMap, starUVW, -1).rgb;
                 starColor = pow(abs(starColor), _StarPower);
                 float starStrength = (1 - sunViewDot1) * saturate(-sunZenithDot);
                 starColor *= (1 - sunMask) * (1 - allMoonMask) * exp2(_StarExposure) * starStrength;
+                #else
+                float3 starColor = 0;
+                float starStrength = 0;
+                #endif
                 
                 // solar eclipse
                 #ifdef MOON_ON
@@ -403,8 +436,12 @@ Shader "Evets/Skybox"
                 moonColor = moonColor * cloudBlocking;
                 starColor = starColor * cloudBlocking;
                 // darken clouds for night
+                #if _CLOUDS
                 float3 cloudRawColor = SAMPLE_TEXTURE2D(_CloudGrad, sampler_CloudGrad, float2(sunZenithDot1, 0.5)).rgb;
                 float3 cloudColoring = (1 - starStrength) * cloudRawColor;
+                #else
+                float3 cloudColoring = 1;
+                #endif
                 cloudColor *= cloudColoring;
                 cloudBackColor *= cloudColoring;
                 float3 frontCloudBlocking = 1 - smoothstep(0.01, .1, cloudColor);

@@ -79,60 +79,103 @@ namespace Evets
 
         private void SetSkyboxValues()
         {
-            RenderSettings.skybox.SetFloat("_SkyExposure", skyExposure);
-            RenderSettings.skybox.SetFloat("_SunRadius", sunRadius);
-            RenderSettings.skybox.SetFloat("_SunIntensity", sunIntensity);
-            RenderSettings.skybox.SetFloat("_SunHaloStrength", sunHaloStrength);
-            RenderSettings.skybox.SetFloat("_SunEdgeFalloff", sunEdgeFalloff);
-            RenderSettings.skybox.SetFloat("_SunCoreSharpness", sunCoreSharpness);
-            RenderSettings.skybox.SetFloat("_SunColorCustomize", customizeSunColors ? 1 : 0);
-            RenderSettings.skybox.SetFloat("_SunTextureOn", sunTexture ? 1 : 0);
-            RenderSettings.skybox.SetTexture("_SunCubeMap", sunCubeMap);
-            RenderSettings.skybox.SetFloat("_SunTextureStrength", sunTextureStrength);
-            RenderSettings.skybox.SetFloat("_SynthSun", synthwaveSun ? 1 : 0);
-            RenderSettings.skybox.SetFloat("_SynthSunBottom", synthSunBottom);
-            RenderSettings.skybox.SetFloat("_SynthSunLines", synthSunLines);
-            
-            moonTurnOn = moonCount > 0;
-            moonTurnOn1 = moonCount > 1;
-            moonTurnOn2 = moonCount > 2;
-            
-            if (moonCount < 1) RenderSettings.skybox.DisableKeyword("MOON_ON");
-            else RenderSettings.skybox.EnableKeyword("MOON_ON");
-            
-            RenderSettings.skybox.SetFloat("_MoonOn", moonTurnOn ? 1 : 0);
-            RenderSettings.skybox.SetFloat("_MoonRadius", moonRadius);
-            RenderSettings.skybox.SetFloat("_MoonEdgeStrength", moonEdgeStrength);
-            RenderSettings.skybox.SetFloat("_MoonExposure", moonExposure);
-            RenderSettings.skybox.SetFloat("_MoonDarkside", moonDarkside);
-            RenderSettings.skybox.SetTexture("_MoonCubeMap", moonTexture);
-            
-            RenderSettings.skybox.SetFloat("_MoonOn1", moonTurnOn1 ? 1 : 0);
-            RenderSettings.skybox.SetFloat("_MoonRadius1", moonRadius1);
-            RenderSettings.skybox.SetFloat("_MoonEdgeStrength1", moonEdgeStrength1);
-            RenderSettings.skybox.SetFloat("_MoonExposure1", moonExposure1);
-            RenderSettings.skybox.SetFloat("_MoonDarkside1", moonDarkside1);
-            RenderSettings.skybox.SetTexture("_MoonCubeMap1", moonTexture1);
-            
-            RenderSettings.skybox.SetFloat("_MoonOn2", moonTurnOn2 ? 1 : 0);
-            RenderSettings.skybox.SetFloat("_MoonRadius2", moonRadius2);
-            RenderSettings.skybox.SetFloat("_MoonEdgeStrength2", moonEdgeStrength2);
-            RenderSettings.skybox.SetFloat("_MoonExposure2", moonExposure2);
-            RenderSettings.skybox.SetFloat("_MoonDarkside2", moonDarkside2);
-            RenderSettings.skybox.SetTexture("_MoonCubeMap2", moonTexture2);
-            
-            RenderSettings.skybox.SetTexture("_StarCubeMap", starCubeMap);
-            RenderSettings.skybox.SetFloat("_StarSpeed", starSpeed * .1f);
-            RenderSettings.skybox.SetFloat("_StarExposure", starExposure);
-            RenderSettings.skybox.SetFloat("_StarPower", starPower);
-            RenderSettings.skybox.SetFloat("_StarLatitude", starLatitude);
-            
-            RenderSettings.skybox.SetTexture("_CloudCubeMap", cloudCubeMap);
-            RenderSettings.skybox.SetFloat("_CloudSpeed", cloudSpeed * .1f);
-            RenderSettings.skybox.SetFloat("_CloudOn", cloudTurnOn ? 1 : 0);
-            RenderSettings.skybox.SetFloat("_CloudAlpha", cloudAlpha);
-            RenderSettings.skybox.SetTexture("_CloudBackCubeMap", cloudBackCubeMap);
-            RenderSettings.skybox.SetFloat("_Cloudiness", cloudiness);
+            var sky = RenderSettings.skybox;
+
+            // ---------- GLOBAL ----------
+            sky.SetFloat("_SkyExposure", skyExposure);
+
+            // ---------- SUN ----------
+            sky.SetFloat("_SunRadius", sunRadius);
+            sky.SetFloat("_SunIntensity", sunIntensity);
+            sky.SetFloat("_SunHaloStrength", sunHaloStrength);
+            sky.SetFloat("_SunEdgeFalloff", sunEdgeFalloff);
+            sky.SetFloat("_SunCoreSharpness", sunCoreSharpness);
+            sky.SetFloat("_SunColorCustomize", customizeSunColors ? 1 : 0);
+            sky.SetFloat("_SynthSun", synthwaveSun ? 1 : 0);
+            sky.SetFloat("_SynthSunBottom", synthSunBottom);
+            sky.SetFloat("_SynthSunLines", synthSunLines);
+
+            // SUN TEXTURE KEYWORD
+            if (sunTexture && sunCubeMap != null)
+            {
+                sky.EnableKeyword("_SUN_TEXTURE");
+                sky.SetTexture("_SunCubeMap", sunCubeMap);
+                sky.SetFloat("_SunTextureStrength", sunTextureStrength);
+            }
+            else
+            {
+                sky.DisableKeyword("_SUN_TEXTURE");
+            }
+
+            // ---------- MOONS ----------
+            bool moon0 = moonCount > 0;
+            bool moon1 = moonCount > 1;
+            bool moon2 = moonCount > 2;
+
+            if (moon0) sky.EnableKeyword("_MOON0"); else sky.DisableKeyword("_MOON0");
+            if (moon1) sky.EnableKeyword("_MOON1"); else sky.DisableKeyword("_MOON1");
+            if (moon2) sky.EnableKeyword("_MOON2"); else sky.DisableKeyword("_MOON2");
+
+            sky.SetFloat("_MoonOn", moon0 ? 1 : 0);
+            sky.SetFloat("_MoonOn1", moon1 ? 1 : 0);
+            sky.SetFloat("_MoonOn2", moon2 ? 1 : 0);
+
+            if (moon0)
+            {
+                sky.SetFloat("_MoonRadius", moonRadius);
+                sky.SetFloat("_MoonEdgeStrength", moonEdgeStrength);
+                sky.SetFloat("_MoonExposure", moonExposure);
+                sky.SetFloat("_MoonDarkside", moonDarkside);
+                sky.SetTexture("_MoonCubeMap", moonTexture);
+            }
+
+            if (moon1)
+            {
+                sky.SetFloat("_MoonRadius1", moonRadius1);
+                sky.SetFloat("_MoonEdgeStrength1", moonEdgeStrength1);
+                sky.SetFloat("_MoonExposure1", moonExposure1);
+                sky.SetFloat("_MoonDarkside1", moonDarkside1);
+                sky.SetTexture("_MoonCubeMap1", moonTexture1);
+            }
+
+            if (moon2)
+            {
+                sky.SetFloat("_MoonRadius2", moonRadius2);
+                sky.SetFloat("_MoonEdgeStrength2", moonEdgeStrength2);
+                sky.SetFloat("_MoonExposure2", moonExposure2);
+                sky.SetFloat("_MoonDarkside2", moonDarkside2);
+                sky.SetTexture("_MoonCubeMap2", moonTexture2);
+            }
+
+            // ---------- STARS ----------
+            if (starCubeMap != null && starExposure > -16f)
+            {
+                sky.EnableKeyword("_STARS");
+                sky.SetTexture("_StarCubeMap", starCubeMap);
+                sky.SetFloat("_StarSpeed", starSpeed * .1f);
+                sky.SetFloat("_StarExposure", starExposure);
+                sky.SetFloat("_StarPower", starPower);
+                sky.SetFloat("_StarLatitude", starLatitude);
+            }
+            else
+            {
+                sky.DisableKeyword("_STARS");
+            }
+
+            // ---------- CLOUDS ----------
+            if (cloudTurnOn && (cloudCubeMap != null || cloudBackCubeMap != null))
+            {
+                sky.EnableKeyword("_CLOUDS");
+                sky.SetTexture("_CloudCubeMap", cloudCubeMap);
+                sky.SetTexture("_CloudBackCubeMap", cloudBackCubeMap);
+                sky.SetFloat("_CloudSpeed", cloudSpeed * .1f);
+                sky.SetFloat("_CloudAlpha", cloudAlpha);
+                sky.SetFloat("_Cloudiness", cloudiness);
+            }
+            else
+            {
+                sky.DisableKeyword("_CLOUDS");
+            }
         }
 
         /// <summary>

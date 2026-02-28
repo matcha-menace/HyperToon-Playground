@@ -13,6 +13,11 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - MOON_ON
+  - _CLOUDS
+  - _MOON0
+  - _MOON1
+  - _MOON2
+  - _STARS
   m_InvalidKeywords:
   - _CLOUDBACKON_ON
   - _CLOUDON_ON

@@ -7,8 +7,8 @@ namespace Evets
 {
     public class SkyboxGUI
     {
-        public static class Info {
-            private const string Version = "1.3.2";
+        private static class Info {
+            private const string Version = "1.4.2";
             private const string Message = "by evets.";
     
             public static readonly string FullInfo = $"{Message} {Version}";
@@ -213,7 +213,7 @@ namespace Evets
             EditorGUILayout.PropertyField(nightDayGradient);
             EditorGUILayout.PropertyField(horizonZenithGradient);
             EditorGUILayout.PropertyField(sunHaloGradient);
-            EditorGUILayout.LabelField("Optional Colors", EditorStyles.label);
+            EditorGUILayout.LabelField("Optional Colors", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
             if (sunColorCustomizeSwitch.boolValue)
             {
